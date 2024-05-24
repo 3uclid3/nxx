@@ -1,6 +1,6 @@
 ---
 ignore:
-  - "nxx/nxx/*.test.cpp"
+  - "**/*.test.cpp"
 coverage:
   status:
     project:
