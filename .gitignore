@@ -1,0 +1,9 @@
+.vscode/*
+.idea/*
+
+build/*
+logs/*
+
+subprojects/*
+!subprojects/*.wrap
+!subprojects/packagefiles/*
