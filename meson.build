@@ -13,9 +13,13 @@ project(
 )
 
 headers = files(
+    'nxx/nxx/type-trait/details/add-const-impl.hpp',
     'nxx/nxx/type-trait/details/is-floating-point-impl.hpp',
+    'nxx/nxx/type-trait/details/is-same-impl.hpp',
+    'nxx/nxx/type-trait/add-const.hpp',
     'nxx/nxx/type-trait/integral-constant.hpp',
     'nxx/nxx/type-trait/is-floating-point.hpp',
+    'nxx/nxx/type-trait/is-same.hpp',
     'nxx/nxx/def.hpp'
 )
 
@@ -73,7 +77,12 @@ if build_tests
     catch2_dep = dependency('catch2', fallback: ['catch2', 'catch2_with_main_dep'])
 
     sources_test = files(
+        'nxx/nxx/type-trait/add-const-volatile.test.cpp',
+        'nxx/nxx/type-trait/add-const.test.cpp',
+        'nxx/nxx/type-trait/add-volatile.test.cpp',
+        'nxx/nxx/type-trait/integral-constant.test.cpp',
         'nxx/nxx/type-trait/is-floating-point.test.cpp',
+        'nxx/nxx/type-trait/is-same.test.cpp',
         'nxx/nxx/def.test.cpp'
     )
 
