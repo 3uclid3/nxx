@@ -1,0 +1,26 @@
+---
+version: '3'
+
+env:
+  BUILD_TYPE: '{{.BUILD_TYPE | default "debug"}}'
+  BUILD_DIR: 'builddir'
+
+dotenv: [ '.env' ]
+
+tasks:
+  wipe:
+    cmds:
+      - meson wipe -C $BUILD_DIR
+  setup:
+    cmds:
+      - meson setup $BUILD_DIR --buildtype $BUILD_TYPE --native-file native-file/{{OS}}.native-file {{.CLI_ARGS}}
+  compile:
+    cmds:
+      - meson compile -C $BUILD_DIR nxx
+  compile-test:
+    cmds:
+      - meson compile -C $BUILD_DIR nxx.test
+  test:
+    cmds:
+      - meson test -C $BUILD_DIR nxx:nxx
+
