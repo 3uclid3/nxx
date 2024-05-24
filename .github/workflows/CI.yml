@@ -7,8 +7,8 @@ on:
     branches:
       - main
 jobs:
-  test:
-    name: test
+  test-and-code-coverage:
+    name: Test and Code Coverage
     runs-on: ubuntu-22.04
 
     strategy:
