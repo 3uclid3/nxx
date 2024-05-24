@@ -1,2 +1,2 @@
-# ncxx
+# nxx
 C++ non-standard library
