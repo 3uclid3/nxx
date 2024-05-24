@@ -24,14 +24,22 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 18
-        
-      - name: Checkout
-        uses: actions/checkout@v4
+          sudo apt-get install -y clang-18 lld-18 llvm-18-dev
+          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+          sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/lld-18 100
       
+      - name: Install Meson, Ninja
+        run: |
+          sudo apt-get install -y meson ninja-build
+          
       - name: Setup go-task
         uses: pnorton5432/setup-task@v1
         with:
-          task-version: 3.29.1
+          task-version: 3.36.0
+
+      - name: Checkout
+        uses: actions/checkout@v4
           
       - name: Setup
         run: |
