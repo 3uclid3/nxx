@@ -7,8 +7,8 @@ on:
     branches:
       - main
 jobs:
-  ci:
-    name: CI
+  test:
+    name: test
     runs-on: ubuntu-22.04
 
     strategy:
