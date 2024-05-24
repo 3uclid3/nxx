@@ -1,0 +1,38 @@
+---
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-22.04
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type: [debug, release]
+        
+    steps:
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "18.0"
+        
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        run: |
+          task setup BUILD_TYPE=${{ matrix.build-type }}
+
+      - name: Compile
+        run: |
+          task compile
+
+      - name: Test
+        run: |
+          task test
