@@ -1,7 +1,7 @@
 ---
+ignore:
+  - "*.test.cpp"
 coverage:
- ignore:
-    - "*.test.cpp"
   status:
     project:
       default:
