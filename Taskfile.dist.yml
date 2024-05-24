@@ -20,4 +20,7 @@ tasks:
   test:
     cmds:
       - meson test -C $BUILD_DIR nxx:nxx
+  generate-coverage:
+    cmds:
+      - ninja -C $BUILD_DIR coverage-xml
 
