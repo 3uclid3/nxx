@@ -30,13 +30,6 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 200
           sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 200
           sudo update-alternatives --install /usr/bin/ld.lld ld.lld /usr/bin/lld-18 200
-          sudo update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-18 200
-          sudo update-alternatives --install /usr/bin/llvm-as llvm-as /usr/bin/llvm-as-18 200
-          sudo update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-18 200
-          sudo update-alternatives --install /usr/bin/llvm-objdump llvm-objdump /usr/bin/llvm-objdump-18 200
-          sudo update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-18 200
-          sudo update-alternatives --install /usr/bin/llvm-strip llvm-strip /usr/bin/llvm-strip-18 200
-       
           
       - name: Install Task
         uses: arduino/setup-task@v2
