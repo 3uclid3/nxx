@@ -40,14 +40,12 @@ jobs:
         uses: actions/checkout@v4
           
       - name: Setup build
-        if: ${{ matrix.build-type }} == 'debug'
         run: |
-          task setup BUILD_TYPE=${{ matrix.build-type }} -- -Db_coverage=true
-          
-      - name: Setup build
-        if: ${{ matrix.build-type }} == 'release'
-        run: |
-          task setup BUILD_TYPE=${{ matrix.build-type }}
+          if [ "${{ matrix.build-type }}" == "debug" ]; then
+            task setup BUILD_TYPE=${{ matrix.build-type }} -- -Db_coverage=true;
+          else
+            task setup BUILD_TYPE=${{ matrix.build-type }};
+          fi
 
       - name: Compile
         run: |
@@ -58,12 +56,12 @@ jobs:
           task test
           
       - name: Coverage report
-        if: ${{ matrix.build-type }} == 'debug'
+        if: matrix.build-type == 'debug'
         run: |
           task generate-coverage
           
       - name: Upload coverage reports to Codecov
-        if: ${{ matrix.build-type }} == 'debug'
+        if: matrix.build-type == 'debug'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
