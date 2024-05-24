@@ -8,9 +8,6 @@ env:
 dotenv: [ '.env' ]
 
 tasks:
-  wipe:
-    cmds:
-      - meson wipe -C $BUILD_DIR
   setup:
     cmds:
       - meson setup $BUILD_DIR --buildtype $BUILD_TYPE --native-file native-file/{{OS}}.native-file {{.CLI_ARGS}}
