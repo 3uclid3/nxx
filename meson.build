@@ -13,8 +13,7 @@ project(
 )
 
 headers = files(
-    'nxx/nxxdef.hpp',
-    'nxx/nxxint.hpp'
+    'nxx/nxx/def.hpp'
 )
 
 sources = files(
@@ -71,7 +70,7 @@ if build_tests
     catch2_dep = dependency('catch2', fallback: ['catch2', 'catch2_with_main_dep'])
 
     sources_test = files(
-        'nxx/nxxint.test.cpp'
+        'nxx/nxx/def.test.cpp'
     )
 
     nxx_test = executable(

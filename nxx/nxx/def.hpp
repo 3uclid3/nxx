@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stddef.h>
 #include <stdint.h>
 
 namespace nxx {
@@ -26,3 +27,4 @@ using f64_t = double;
 using size_t = ::size_t;
 
 }
+
