@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include <nxx/static-array.hpp>
+#include <nxx/container/static-array.hpp>
 
 namespace nxx {
 

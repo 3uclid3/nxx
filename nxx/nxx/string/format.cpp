@@ -1,4 +1,4 @@
-#include <nxx/format.hpp>
+#include <nxx/string/format.hpp>
 
 namespace nxx {
 

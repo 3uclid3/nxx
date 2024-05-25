@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include <nxx/format.hpp>
+#include <nxx/string/format.hpp>
 
 namespace nxx {
 

@@ -13,7 +13,7 @@ project(
 )
 
 sources = files(
-    'nxx/nxx/format.cpp'
+    'nxx/nxx/string/format.cpp'
 )
 
 opt_asan = get_option('asan')
@@ -67,6 +67,9 @@ if build_tests
 
     tests = files(
         'nxx/nxx/algorithm/min.test.cpp',
+        'nxx/nxx/container/static-array.test.cpp',
+        'nxx/nxx/string/format.test.cpp',
+        'nxx/nxx/string/string-view.test.cpp',
         'nxx/nxx/type-trait/add-const-volatile.test.cpp',
         'nxx/nxx/type-trait/add-const.test.cpp',
         'nxx/nxx/type-trait/add-lvalue-reference.test.cpp',
@@ -93,10 +96,7 @@ if build_tests
         'nxx/nxx/type-trait/remove-reference.test.cpp',
         'nxx/nxx/type-trait/remove-volatile.test.cpp',
         'nxx/nxx/utility/integer-sequence.test.cpp',
-        'nxx/nxx/def.test.cpp',
-        'nxx/nxx/format.test.cpp',
-        'nxx/nxx/static-array.test.cpp',
-        'nxx/nxx/string-view.test.cpp'
+        'nxx/nxx/def.test.cpp'
     )
 
     nxx_test = executable(
