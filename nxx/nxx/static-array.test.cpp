@@ -2,8 +2,6 @@
 
 #include <nxx/static-array.hpp>
 
-#include <array>
-
 namespace nxx {
 
 TEST_CASE("static_array::fill")
