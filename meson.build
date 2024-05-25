@@ -71,6 +71,7 @@ if build_tests
         'nxx/nxx/container/static-array.test.cpp',
         'nxx/nxx/string/format.test.cpp',
         'nxx/nxx/string/string-view.test.cpp',
+        'nxx/nxx/string/to-string-view.test.cpp',
         'nxx/nxx/type-trait/add-const-volatile.test.cpp',
         'nxx/nxx/type-trait/add-const.test.cpp',
         'nxx/nxx/type-trait/add-lvalue-reference.test.cpp',
