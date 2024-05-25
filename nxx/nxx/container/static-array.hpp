@@ -141,13 +141,13 @@ constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array_rvalue(T
 } // namespace details
 
 template<typename T, size_t SizeT>
-constexpr static_array<remove_const_volatile<T>, SizeT> tostatic_array(T (&array)[SizeT])
+constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&array)[SizeT])
 {
     return details::to_static_array_lvalue(array, make_index_sequence<SizeT>());
 }
 
 template<typename T, size_t SizeT>
-constexpr static_array<remove_const_volatile<T>, SizeT> tostatic_array(T (&&array)[SizeT])
+constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&&array)[SizeT])
 {
     return details::to_static_array_rvalue(move(array), make_index_sequence<SizeT>());
 }
