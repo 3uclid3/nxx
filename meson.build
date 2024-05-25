@@ -89,6 +89,7 @@ if build_tests
         'nxx/nxx/type-trait/is-same.test.cpp',
         'nxx/nxx/def.test.cpp',
         'nxx/nxx/format.test.cpp',
+        'nxx/nxx/static-array.test.cpp',
         'nxx/nxx/string-view.test.cpp'
     )
 
