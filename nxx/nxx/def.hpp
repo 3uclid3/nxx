@@ -3,6 +3,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define NXX_ASSERT(condition, ...) \
+    do { \
+        if (!(condition)) __builtin_trap(); \
+    } while (false)
+
+#define NXX_UNUSED(var) (void)var
+#define NXX_UNREACHABLE() __builtin_unreachable()
+
 namespace nxx {
 
 using nullptr_t = decltype(nullptr);
@@ -26,5 +34,6 @@ using f64_t = double;
 
 using size_t = ::size_t;
 
-}
+inline constexpr size_t bits_per_byte{8};
 
+} // namespace nxx

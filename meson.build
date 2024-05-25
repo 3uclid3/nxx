@@ -12,20 +12,6 @@ project(
     ]
 )
 
-headers = files(
-    'nxx/nxx/algorithm/min.hpp',
-    'nxx/nxx/type-trait/details/add-const-impl.hpp',
-    'nxx/nxx/type-trait/details/is-floating-point-impl.hpp',
-    'nxx/nxx/type-trait/details/is-same-impl.hpp',
-    'nxx/nxx/type-trait/add-const.hpp',
-    'nxx/nxx/type-trait/integral-constant.hpp',
-    'nxx/nxx/type-trait/is-floating-point.hpp',
-    'nxx/nxx/type-trait/is-same.hpp',
-    'nxx/nxx/def.hpp',
-    'nxx/nxx/format.hpp',
-    'nxx/nxx/string-view.hpp'
-)
-
 sources = files(
     'nxx/nxx/format.cpp'
 )
@@ -77,16 +63,26 @@ nxx_dep  = declare_dependency(
 
 if build_tests
     catch2 = subproject('catch2', default_options:['tests=false', 'warning_level=1', 'werror=false'])
-    catch2_dep = dependency('catch2', fallback: ['catch2', 'catch2_with_main_dep'])
+    catch2_dep = catch2.get_variable('catch2_with_main_dep')
 
-    sources_test = files(
+    tests = files(
         'nxx/nxx/algorithm/min.test.cpp',
         'nxx/nxx/type-trait/add-const-volatile.test.cpp',
         'nxx/nxx/type-trait/add-const.test.cpp',
+        'nxx/nxx/type-trait/add-lvalue-reference.test.cpp',
+        'nxx/nxx/type-trait/add-pointer.test.cpp',
+        'nxx/nxx/type-trait/add-rvalue-reference.test.cpp',
         'nxx/nxx/type-trait/add-volatile.test.cpp',
+        'nxx/nxx/type-trait/bits-of.test.cpp',
+        'nxx/nxx/type-trait/conditional.test.cpp',
+        'nxx/nxx/type-trait/decay.test.cpp',
         'nxx/nxx/type-trait/integral-constant.test.cpp',
         'nxx/nxx/type-trait/is-floating-point.test.cpp',
+        'nxx/nxx/type-trait/is-integral.test.cpp',
+        'nxx/nxx/type-trait/is-enum-class.test.cpp',
         'nxx/nxx/type-trait/is-same.test.cpp',
+        'nxx/nxx/type-trait/is-signed-integer.test.cpp',
+        'nxx/nxx/type-trait/is-signed.test.cpp',
         'nxx/nxx/def.test.cpp',
         'nxx/nxx/format.test.cpp',
         'nxx/nxx/static-array.test.cpp',
@@ -95,7 +91,7 @@ if build_tests
 
     nxx_test = executable(
         'nxx.test',
-        sources_test,
+        tests,
         install : false,
         dependencies : [catch2_dep, nxx_dep]
     )
