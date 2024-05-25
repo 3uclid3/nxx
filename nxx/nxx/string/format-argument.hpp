@@ -1,7 +1,7 @@
 #pragma once
 
 #include <nxx/def.hpp>
-#include <nxx/string-view.hpp>
+#include <nxx/string/string-view.hpp>
 
 namespace nxx {
 
