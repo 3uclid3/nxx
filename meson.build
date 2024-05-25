@@ -99,6 +99,7 @@ if build_tests
         'nxx/nxx/type-trait/remove-reference.test.cpp',
         'nxx/nxx/type-trait/remove-volatile.test.cpp',
         'nxx/nxx/utility/integer-sequence.test.cpp',
+        'nxx/nxx/utility/source-location.test.cpp',
         'nxx/nxx/def.test.cpp'
     )
 
