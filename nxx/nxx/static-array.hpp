@@ -3,18 +3,19 @@
 #include <nxx/def.hpp>
 #include <nxx/type-trait/is-const.hpp>
 #include <nxx/type-trait/remove-const-volatile.hpp>
+#include <nxx/utility/integer-sequence.hpp>
 #include <nxx/utility/move.hpp>
 
-namespace NOS {
+namespace nxx {
 
 template<typename T, size_t SizeT>
 class static_array;
 
 template<typename T, size_t SizeT>
-constexpr static_array<RemoveConstVolatileT<T>, SizeT> to_static_array(T (&array)[SizeT]);
+constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&array)[SizeT]);
 
 template<typename T, size_t SizeT>
-constexpr static_array<RemoveConstVolatileT<T>, SizeT> to_static_array(T (&&array)[SizeT]);
+constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&&array)[SizeT]);
 
 template<typename T, size_t SizeT>
 class static_array
@@ -22,22 +23,20 @@ class static_array
 public:
     using value_type = T;
 
-    using value_type = value_type&;
-    using Constvalue_type = const value_type&;
+    using reference = T&;
+    using const_reference = const T&;
 
-    using iterator = value_type*;
-    using const_iterator = const value_type*;
+    using iterator = T*;
+    using const_iterator = const T*;
 
-    using Pointer = value_type*;
-    using ConstPointer = const value_type*;
+    using pointer = T*;
+    using const_pointer = const T*;
 
-    using SizeType = size_t;
-    using DifferenceType = ptrdiff_t;
-
-    static constexpr SizeType max_size{SizeT};
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
 
 public:
-    void fill(const value_type& value);
+    void fill(const T& value);
     void swap(static_array& other);
 
 public:
@@ -51,14 +50,14 @@ public:
     constexpr iterator end();
 
 public:
-    constexpr SizeType size() const;
+    constexpr size_type size() const;
 
-    constexpr SizeType max_size() const;
+    constexpr size_type max_size() const;
     constexpr bool is_empty() const;
 
 public:
-    constexpr const_reference operator[](SizeType index) const;
-    constexpr reference operator[](SizeType index);
+    constexpr const_reference operator[](size_type index) const;
+    constexpr reference operator[](size_type index);
 
     constexpr const_reference first() const;
     constexpr reference first();
@@ -79,22 +78,20 @@ class static_array<T, 0>
 public:
     using value_type = T;
 
-    using reference = value_type&;
-    using const_reference = const value_type&;
+    using reference = T&;
+    using const_reference = const T&;
 
-    using iterator = value_type*;
-    using const_iterator = const value_type*;
+    using iterator = T*;
+    using const_iterator = const T*;
 
-    using pointer = value_type*;
-    using const_pointer = const value_type*;
+    using pointer = T*;
+    using const_pointer = const T*;
 
-    using SizeType = size_t;
+    using size_type = size_t;
     using difference_type = ptrdiff_t;
 
-    static constexpr SizeType max_size{0};
-
 public:
-    void fill(const value_type& value);
+    void fill(const T& value);
     void swap(static_array& other);
 
 public:
@@ -108,14 +105,14 @@ public:
     constexpr iterator end();
 
 public:
-    constexpr SizeType size() const;
+    constexpr size_type size() const;
 
-    constexpr SizeType max_size() const;
+    constexpr size_type max_size() const;
     constexpr bool is_empty() const;
 
 public:
-    constexpr const_reference operator[](SizeType index) const;
-    constexpr reference operator[](SizeType index);
+    constexpr const_reference operator[](size_type index) const;
+    constexpr reference operator[](size_type index);
 
     constexpr const_reference first() const;
     constexpr reference first();
@@ -127,36 +124,36 @@ public:
     constexpr value_type* data();
 };
 
-namespace Details {
+namespace details {
 
-template<typename T, size_t SizeT, size_t... TIndex>
-constexpr static_array<RemoveConstVolatileT<T>, SizeT> to_static_array(T (&array)[SizeT], IndexSequence<TIndex...>)
+template<typename T, size_t SizeT, size_t... IndexT>
+constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array_lvalue(T (&array)[SizeT], index_sequence<IndexT...>)
 {
-    return {{array[TIndex]...}};
+    return {{array[IndexT]...}};
 }
 
-template<typename T, size_t SizeT, size_t... TIndex>
-constexpr static_array<RemoveConstVolatileT<T>, SizeT> to_static_array(T (&&array)[SizeT], IndexSequence<TIndex...>)
+template<typename T, size_t SizeT, size_t... IndexT>
+constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array_rvalue(T (&&array)[SizeT], index_sequence<IndexT...>)
 {
-    return {{move(array[TIndex])...}};
+    return {{move(array[IndexT])...}};
 }
 
-} // namespace Details
+} // namespace details
 
 template<typename T, size_t SizeT>
-constexpr static_array<RemoveConstVolatileT<T>, SizeT> tostatic_array(T (&array)[SizeT])
+constexpr static_array<remove_const_volatile<T>, SizeT> tostatic_array(T (&array)[SizeT])
 {
-    return Details::tostatic_arrayLValue(array, MakeIndexSequence<SizeT>());
-}
-
-template<typename T, size_t SizeT>
-constexpr static_array<RemoveConstVolatileT<T>, SizeT> tostatic_array(T (&&array)[SizeT])
-{
-    return Details::tostatic_arrayRValue(move(array), MakeIndexSequence<SizeT>());
+    return details::to_static_array_lvalue(array, make_index_sequence<SizeT>());
 }
 
 template<typename T, size_t SizeT>
-void static_array<T, SizeT>::fill(const value_type& value)
+constexpr static_array<remove_const_volatile<T>, SizeT> tostatic_array(T (&&array)[SizeT])
+{
+    return details::to_static_array_rvalue(move(array), make_index_sequence<SizeT>());
+}
+
+template<typename T, size_t SizeT>
+void static_array<T, SizeT>::fill(const T& value)
 {
     for (T& v : *this)
     {
@@ -205,13 +202,13 @@ constexpr static_array<T, SizeT>::const_iterator static_array<T, SizeT>::cend() 
 }
 
 template<typename T, size_t SizeT>
-constexpr static_array<T, SizeT>::SizeType static_array<T, SizeT>::size() const
+constexpr static_array<T, SizeT>::size_type static_array<T, SizeT>::size() const
 {
     return SizeT;
 }
 
 template<typename T, size_t SizeT>
-constexpr static_array<T, SizeT>::SizeType static_array<T, SizeT>::max_size() const
+constexpr static_array<T, SizeT>::size_type static_array<T, SizeT>::max_size() const
 {
     return SizeT;
 }
@@ -223,14 +220,14 @@ constexpr bool static_array<T, SizeT>::is_empty() const
 }
 
 template<typename T, size_t SizeT>
-constexpr static_array<T, SizeT>::reference static_array<T, SizeT>::operator[](SizeType index)
+constexpr static_array<T, SizeT>::reference static_array<T, SizeT>::operator[](size_type index)
 {
     NXX_ASSERT(index < SizeT, "out-of-bounds access in static_array<T, N>");
     return _data[index];
 }
 
 template<typename T, size_t SizeT>
-constexpr static_array<T, SizeT>::const_reference static_array<T, SizeT>::operator[](SizeType index) const
+constexpr static_array<T, SizeT>::const_reference static_array<T, SizeT>::operator[](size_type index) const
 {
     NXX_ASSERT(index < SizeT, "out-of-bounds access in static_array<T, N>");
     return _data[index];
@@ -273,16 +270,14 @@ constexpr static_array<T, SizeT>::value_type* static_array<T, SizeT>::data()
 }
 
 template<typename T>
-void static_array<T, 0>::fill(const value_type& value)
+void static_array<T, 0>::fill(const T& value)
 {
-    static_assert(!IsConstV<T>, "cannot fill zero-sized static_array of type 'const T'");
     NXX_UNUSED(value);
 }
 
 template<typename T>
 void static_array<T, 0>::swap(static_array& other)
 {
-    static_assert(!IsConstV<T>, "cannot swap zero-sized static_array of type 'const T'");
     NXX_UNUSED(other);
 }
 
@@ -323,13 +318,13 @@ constexpr static_array<T, 0>::const_iterator static_array<T, 0>::cend() const
 }
 
 template<typename T>
-constexpr static_array<T, 0>::SizeType static_array<T, 0>::size() const
+constexpr static_array<T, 0>::size_type static_array<T, 0>::size() const
 {
     return 0;
 }
 
 template<typename T>
-constexpr static_array<T, 0>::SizeType static_array<T, 0>::max_size() const
+constexpr static_array<T, 0>::size_type static_array<T, 0>::max_size() const
 {
     return 0;
 }
@@ -341,7 +336,7 @@ constexpr bool static_array<T, 0>::is_empty() const
 }
 
 template<typename T>
-constexpr static_array<T, 0>::reference static_array<T, 0>::operator[](SizeType index)
+constexpr static_array<T, 0>::reference static_array<T, 0>::operator[](size_type index)
 {
     NXX_ASSERT(false, "cannot call static_array<T, 0>:::operator[] on a zero-sized static_array");
     NXX_UNUSED(index);
@@ -349,7 +344,7 @@ constexpr static_array<T, 0>::reference static_array<T, 0>::operator[](SizeType 
 }
 
 template<typename T>
-constexpr static_array<T, 0>::const_reference static_array<T, 0>::operator[](SizeType index) const
+constexpr static_array<T, 0>::const_reference static_array<T, 0>::operator[](size_type index) const
 {
     NXX_ASSERT(false, "cannot call static_array<T, 0>:::operator[] on a zero-sized static_array");
     NXX_UNUSED(index);
@@ -396,4 +391,4 @@ constexpr static_array<T, 0>::value_type* static_array<T, 0>::data()
     return nullptr;
 }
 
-} // namespace NOS
+} // namespace nxx
