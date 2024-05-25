@@ -4,8 +4,8 @@
 
 namespace nxx {
 
-TEST_CASE("int")
-{   
+TEST_CASE("def")
+{
     STATIC_CHECK(sizeof(u8_t) == 1);
     STATIC_CHECK(sizeof(s8_t) == 1);
 
@@ -22,4 +22,4 @@ TEST_CASE("int")
     STATIC_CHECK(sizeof(f64_t) == 8);
 }
 
-} // namespace NOS
+} // namespace nxx

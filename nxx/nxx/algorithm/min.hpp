@@ -11,4 +11,4 @@ constexpr T min(T lhs, T rhs)
     return lhs > rhs ? rhs : lhs;
 }
 
-} // namespace NOS
+} // namespace nxx
