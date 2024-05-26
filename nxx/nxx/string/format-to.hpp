@@ -11,17 +11,17 @@
 
 namespace nxx {
 
-template<typename TOut, typename... TArguments>
-void format_to(TOut& out, string_view fmt, const TArguments&... rawArguments);
+template<typename OutT, typename... ArgsT>
+void format_to(OutT& out, string_view fmt, const ArgsT&... raw_args);
 
-template<typename TOut>
-void format_to(TOut& out, string_view fmt, span<format_argument> arguments);
+template<typename OutT>
+void vformat_to(OutT& out, string_view fmt, span<format_argument> arguments);
 
-template<typename TOut, typename... TArguments>
-void format_to(TOut& out, string_view fmt, const TArguments&... rawArguments)
+template<typename OutT, typename... ArgsT>
+void format_to(OutT& out, string_view fmt, const ArgsT&... raw_args)
 {
-    static_array arguments = make_format_arguments(rawArguments...);
-    format_to(out, fmt, span<format_argument>(arguments));
+    static_array args = make_format_arguments(raw_args...);
+    vformat_to(out, fmt, span<format_argument>(args));
 }
 
 namespace details {
@@ -92,8 +92,8 @@ void format_argument_to(OutT& out, format_specification specification, format_ar
 
 } // namespace details
 
-template<typename TOut>
-void format_to(TOut& out, string_view fmt, span<format_argument> arguments)
+template<typename OutT>
+void vformat_to(OutT& out, string_view fmt, span<format_argument> arguments)
 {
     size_t next_argument_index = 0;
 
