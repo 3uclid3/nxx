@@ -23,7 +23,7 @@ jobs:
           
       - name: Setup build
         run: |
-          if [ "${{ matrix.build-type }}" == "debug" ]; then
+          if [ "${{ matrix.build-type }}" = "debug" ]; then
             task setup BUILD_TYPE=${{ matrix.build-type }} -- -Db_coverage=true;
           else
             task setup BUILD_TYPE=${{ matrix.build-type }};
