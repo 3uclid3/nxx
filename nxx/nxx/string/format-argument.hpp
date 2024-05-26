@@ -94,11 +94,11 @@ private:
 };
 
 template<typename... ArgsT>
-auto make_format_arguments(const ArgsT&... rawArguments)
+auto make_format_arguments(const ArgsT&... args)
 {
     if constexpr (sizeof...(ArgsT) > 0)
     {
-        return to_static_array<format_argument>({rawArguments...});
+        return to_static_array<format_argument>({args...});
     }
     else
     {
