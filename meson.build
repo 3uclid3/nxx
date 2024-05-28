@@ -69,6 +69,7 @@ if build_tests
         'nxx/nxx/algorithm/min.test.cpp',
         'nxx/nxx/container/span.test.cpp',
         'nxx/nxx/container/static-array.test.cpp',
+        'nxx/nxx/memory/memory-block.test.cpp',
         'nxx/nxx/string/format-to.test.cpp',
         'nxx/nxx/string/format.test.cpp',
         'nxx/nxx/string/string-view.test.cpp',
