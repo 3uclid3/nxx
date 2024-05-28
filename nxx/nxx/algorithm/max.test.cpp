@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <nxx/algorithm/min.hpp>
+#include <nxx/def.hpp>
 
 namespace nxx {
 
