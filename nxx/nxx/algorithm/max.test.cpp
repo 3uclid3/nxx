@@ -1,20 +1,19 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include <nxx/algorithm/min.hpp>
-#include <nxx/def.hpp>
+#include <nxx/algorithm/max.hpp>
 
 namespace nxx {
 
-TEST_CASE("min", "[algorithm]")
+TEST_CASE("max", "[algorithm]")
 {
-    CHECK(min(0, 1) == 0);
-    CHECK(min(1, 0) == 0);
+    CHECK(max(0, 1) == 1);
+    CHECK(max(1, 0) == 1);
 
-    CHECK(min(0, -1) == -1);
-    CHECK(min(-1, 0) == -1);
+    CHECK(max(0, -1) == 0);
+    CHECK(max(-1, 0) == 0);
 
-    CHECK(min('a', 'z') == 'a');
-    CHECK(min('z', 'a') == 'a');
+    CHECK(max('a', 'z') == 'z');
+    CHECK(max('z', 'a') == 'z');
 }
 
 } // namespace nxx

@@ -3,12 +3,12 @@
 namespace nxx {
 
 template<typename T>
-constexpr T min(T lhs, T rhs);
+constexpr T max(T lhs, T rhs);
 
 template<typename T>
-constexpr T min(T lhs, T rhs)
+constexpr T max(T lhs, T rhs)
 {
-    return lhs > rhs ? rhs : lhs;
+    return lhs < rhs ? rhs : lhs;
 }
 
 } // namespace nxx
