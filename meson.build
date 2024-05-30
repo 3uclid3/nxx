@@ -66,6 +66,10 @@ if build_tests
     catch2_dep = catch2.get_variable('catch2_with_main_dep')
 
     tests = files(
+        # utility
+        'nxx/nxx/debug/assert-test-impl.cpp',
+
+        # tests
         'nxx/nxx/algorithm/min.test.cpp',
         'nxx/nxx/container/span.test.cpp',
         'nxx/nxx/container/static-array.test.cpp',

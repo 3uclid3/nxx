@@ -3,10 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define NXX_ASSERT(condition, ...) \
-    do { \
-        if (!(condition)) __builtin_trap(); \
-    } while (false)
+#include <nxx/debug/assert.hpp>
 
 #define NXX_UNUSED(var) (void)var
 #define NXX_UNREACHABLE() __builtin_unreachable()
