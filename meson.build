@@ -71,6 +71,7 @@ if build_tests
 
         # tests
         'nxx/nxx/algorithm/min.test.cpp',
+        'nxx/nxx/debug/assert.test.cpp',
         'nxx/nxx/container/span.test.cpp',
         'nxx/nxx/container/static-array.test.cpp',
         'nxx/nxx/memory/allocator/fallback-allocator.test.cpp',
