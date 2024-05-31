@@ -1,5 +1,7 @@
 #include <nxx/memory/new.hpp>
 
+#ifndef NXX_NO_DECLARE_NEW_OPERATOR
+
 #include <malloc.h>
 
 #include <nxx/def.hpp>
@@ -36,3 +38,5 @@ void operator delete[](void* ptr, nxx::size_t size) noexcept
     NXX_UNUSED(size);
     free(ptr);
 }
+
+#endif

@@ -46,13 +46,19 @@ if sanitizers.length() > 0
     sanitizers = '-fsanitize=' + ','.join(sanitizers)
 endif
 
+macros = []
+if build_tests
+    macros += ['-DNXX_NO_DECLARE_NEW_OPERATOR']
+endif
+
+
 nxx = static_library(
     'nxx',
     sources,
     install : false,
     include_directories : ['nxx'],
-    c_args : ['-ffreestanding', sanitizers],
-    cpp_args : ['-ffreestanding', sanitizers]
+    c_args : ['-ffreestanding', sanitizers, macros],
+    cpp_args : ['-ffreestanding', sanitizers, macros]
 )
 
 nxx_dep  = declare_dependency(
@@ -80,6 +86,7 @@ if build_tests
         'nxx/nxx/memory/allocator/null-allocator.test.cpp',
         'nxx/nxx/memory/allocator/stack-allocator.test.cpp',
         'nxx/nxx/memory/memory-block.test.cpp',
+        'nxx/nxx/memory/unique-ptr.test.cpp',
         'nxx/nxx/string/format-to.test.cpp',
         'nxx/nxx/string/format.test.cpp',
         'nxx/nxx/string/string-view.test.cpp',
@@ -110,7 +117,11 @@ if build_tests
         'nxx/nxx/type-trait/remove-reference.test.cpp',
         'nxx/nxx/type-trait/remove-volatile.test.cpp',
         'nxx/nxx/utility/integer-sequence.test.cpp',
+        'nxx/nxx/utility/function.test.cpp',
+        'nxx/nxx/utility/on-scope-exit.test.cpp',
+        'nxx/nxx/utility/ref-wrap.test.cpp',
         'nxx/nxx/utility/source-location.test.cpp',
+        'nxx/nxx/utility/swap.test.cpp',
         'nxx/nxx/utility/to-underlying.test.cpp',
         'nxx/nxx/def.test.cpp'
     )
@@ -119,7 +130,9 @@ if build_tests
         'nxx.test',
         tests,
         install : false,
-        dependencies : [catch2_dep, nxx_dep]
+        dependencies : [catch2_dep, nxx_dep],
+        c_args : [macros],
+        cpp_args : [macros]
     )
 
     test('nxx', nxx_test)

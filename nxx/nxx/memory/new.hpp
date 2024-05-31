@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef NXX_NO_DECLARE_NEW_OPERATOR
+
 #include <nxx/def.hpp>
 
 [[nodiscard]] void* operator new(nxx::size_t size);
@@ -37,3 +39,5 @@ inline void operator delete[](void* ptr, void* place) noexcept
     NXX_UNUSED(ptr);
     NXX_UNUSED(place);
 }
+
+#endif
