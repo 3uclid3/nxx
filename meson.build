@@ -68,6 +68,8 @@ if build_tests
     tests = files(
         # utility
         'nxx/nxx/debug/assert-test-impl.cpp',
+        'nxx/nxx/memory/alloc-test-impl.cpp',
+        'nxx/nxx/memory/new-test-impl.cpp',
 
         # tests
         'nxx/nxx/algorithm/min.test.cpp',
