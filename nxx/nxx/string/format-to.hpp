@@ -3,7 +3,7 @@
 #include <nxx/container/span.hpp>
 #include <nxx/container/static-array.hpp>
 #include <nxx/def.hpp>
-#include <nxx/string/digit.hpp>
+#include <nxx/string/cstring.hpp>
 #include <nxx/string/format-argument.hpp>
 #include <nxx/string/format-specification.hpp>
 #include <nxx/string/string-view.hpp>

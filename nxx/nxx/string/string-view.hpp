@@ -2,6 +2,7 @@
 
 #include <nxx/algorithm/min.hpp>
 #include <nxx/def.hpp>
+#include <nxx/string/cstring.hpp>
 
 namespace nxx {
 
@@ -65,11 +66,8 @@ constexpr basic_string_view<CharT>::basic_string_view(const char_type* str, size
 template<typename CharT>
 constexpr basic_string_view<CharT>::basic_string_view(const char_type* cstr)
     : _data(cstr)
+    , _size(strlen(cstr))
 {
-    if (cstr != nullptr)
-    {
-        while (cstr[_size] != '\0') ++_size;
-    }
 }
 
 template<typename CharT>
