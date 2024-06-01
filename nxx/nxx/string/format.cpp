@@ -1,8 +1,8 @@
 #include <nxx/string/format.hpp>
 
-#include <nxx/container/static-array.hpp>
-#include <nxx/string/format-to.hpp>
-#include <nxx/utility/as-const.hpp>
+#include <nxx/container/static_array.hpp>
+#include <nxx/string/format_to.hpp>
+#include <nxx/utility/as_const.hpp>
 
 namespace nxx {
 

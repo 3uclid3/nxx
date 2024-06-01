@@ -2,7 +2,7 @@
 
 #include <nxx/debug/assert.hpp>
 #include <nxx/def.hpp>
-#include <nxx/memory/unique-ptr.hpp>
+#include <nxx/memory/unique_ptr.hpp>
 #include <nxx/utility/forward.hpp>
 #include <nxx/utility/move.hpp>
 

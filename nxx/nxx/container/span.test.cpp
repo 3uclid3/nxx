@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <nxx/container/span.hpp>
-#include <nxx/container/static-array.hpp>
+#include <nxx/container/static_array.hpp>
 
 namespace nxx {
 

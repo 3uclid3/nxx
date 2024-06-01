@@ -2,8 +2,8 @@
 
 #include <nxx/def.hpp>
 #include <nxx/container/span.hpp>
-#include <nxx/string/format-argument.hpp>
-#include <nxx/string/string-view.hpp>
+#include <nxx/string/format_argument.hpp>
+#include <nxx/string/string_view.hpp>
 
 namespace nxx {
 

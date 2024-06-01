@@ -1,7 +1,7 @@
 #pragma once
 
-#include <nxx/type-trait/is-lvalue-reference.hpp>
-#include <nxx/type-trait/remove-reference.hpp>
+#include <nxx/type_trait/is_lvalue_reference.hpp>
+#include <nxx/type_trait/remove_reference.hpp>
 
 namespace nxx {
 

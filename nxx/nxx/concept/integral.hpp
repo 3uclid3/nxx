@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nxx/type-trait/is-integral.hpp>
+#include <nxx/type_trait/is_integral.hpp>
 
 namespace nxx {
 

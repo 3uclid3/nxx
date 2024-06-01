@@ -10,7 +10,7 @@ dotenv: [ '.env' ]
 tasks:
   setup:
     cmds:
-      - meson setup $BUILD_DIR --buildtype $BUILD_TYPE --native-file native-file/{{OS}}.native-file {{.CLI_ARGS}}
+      - meson setup $BUILD_DIR --buildtype $BUILD_TYPE --native-file native_file/{{OS}}.native_file {{.CLI_ARGS}}
   compile:
     cmds:
       - meson compile -C $BUILD_DIR nxx

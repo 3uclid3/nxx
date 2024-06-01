@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nxx/memory/address-of.hpp>
+#include <nxx/memory/address_of.hpp>
 
 namespace nxx {
 

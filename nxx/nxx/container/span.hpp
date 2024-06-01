@@ -1,9 +1,9 @@
 #pragma once
 
-#include <nxx/container/static-array.hpp>
+#include <nxx/container/static_array.hpp>
 #include <nxx/def.hpp>
-#include <nxx/memory/pointer-traits.hpp>
-#include <nxx/type-trait/remove-const-volatile.hpp>
+#include <nxx/memory/pointer_traits.hpp>
+#include <nxx/type_trait/remove_const_volatile.hpp>
 
 namespace nxx {
 

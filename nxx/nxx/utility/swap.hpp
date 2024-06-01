@@ -1,7 +1,7 @@
 #pragma once
 
-#include <nxx/type-trait/is-move-assignable.hpp>
-#include <nxx/type-trait/is-move-constructible.hpp>
+#include <nxx/type_trait/is_move_assignable.hpp>
+#include <nxx/type_trait/is_move_constructible.hpp>
 #include <nxx/utility/move.hpp>
 
 namespace nxx {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nxx/type-trait/remove-reference.hpp>
+#include <nxx/type_trait/remove_reference.hpp>
 
 namespace nxx {
 

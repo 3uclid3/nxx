@@ -1,7 +1,7 @@
 #pragma once
 
 #include <nxx/def.hpp>
-#include <nxx/memory/memory-block.hpp>
+#include <nxx/memory/memory_block.hpp>
 
 namespace nxx {
 
