@@ -19,7 +19,7 @@ public:
     {
         const size_t offset = _next_buffer_index * buffer_size;
         _next_buffer_index = _next_buffer_index == last_buffer_index ? 0 : _next_buffer_index + 1;
-        return {&_buffer[offset], buffer_count};
+        return {&_buffer[offset], buffer_size};
     }
 
 private:
