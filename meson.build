@@ -3,7 +3,7 @@ project(
     version : 'v0.1',
     license: 'GPL-3.0',
     default_options : [
-        'cpp_std=c++2a',
+        'cpp_std=c++23',
         'default_library=static',
         'warning_level=2',
         'werror=true',
