@@ -78,7 +78,17 @@ if build_tests
         'nxx/nxx/memory/new-test-impl.cpp',
 
         # tests
+        'nxx/nxx/algorithm/all-of.test.cpp',
+        'nxx/nxx/algorithm/all.test.cpp',
+        'nxx/nxx/algorithm/any-of.test.cpp',
+        'nxx/nxx/algorithm/any.test.cpp',
+        'nxx/nxx/algorithm/clamp.test.cpp',
+        'nxx/nxx/algorithm/find-if.test.cpp',
+        'nxx/nxx/algorithm/find.test.cpp',
+        'nxx/nxx/algorithm/max.test.cpp',
         'nxx/nxx/algorithm/min.test.cpp',
+        'nxx/nxx/algorithm/none-of.test.cpp',
+        'nxx/nxx/algorithm/none.test.cpp',
         'nxx/nxx/debug/assert.test.cpp',
         'nxx/nxx/container/span.test.cpp',
         'nxx/nxx/container/static-array.test.cpp',
