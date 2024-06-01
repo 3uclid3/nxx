@@ -11,7 +11,7 @@ struct base_object
     bool otor_copy : 1 {false};
     bool otor_move : 1 {false};
 
-    inline static void resetCounts()
+    inline static void reset_counts()
     {
         ctor_count = 0;
         dtor_count = 0;
@@ -174,16 +174,16 @@ struct object_fixture
 {
     object_fixture()
     {
-        object::resetCounts();
-        copy_only_object::resetCounts();
-        move_only_object::resetCounts();
+        object::reset_counts();
+        copy_only_object::reset_counts();
+        move_only_object::reset_counts();
     }
 
     virtual ~object_fixture()
     {
-        object::resetCounts();
-        copy_only_object::resetCounts();
-        move_only_object::resetCounts();
+        object::reset_counts();
+        copy_only_object::reset_counts();
+        move_only_object::reset_counts();
     }
 };
 
