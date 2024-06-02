@@ -42,6 +42,7 @@ public:
     constexpr span& operator=(const span&) = default;
     
     constexpr size_type size() const;
+    constexpr bool is_empty() const;
 
     constexpr const_reference operator[](size_t index) const;
     constexpr reference operator[](size_t index);
@@ -105,6 +106,7 @@ public:
     constexpr span(ItT first, EndT last);
 
     constexpr size_type size() const;
+    constexpr bool is_empty() const;
 
     constexpr const_reference operator[](size_type index) const;
     constexpr reference operator[](size_type index);
@@ -136,6 +138,12 @@ template<typename T, size_t ExtentT>
 constexpr span<T, ExtentT>::size_type span<T, ExtentT>::size() const
 {
     return ExtentT;
+}
+
+template<typename T, size_t ExtentT>
+constexpr bool span<T, ExtentT>::is_empty() const
+{
+    return size() == 0;
 }
 
 template<typename T, size_t ExtentT>
@@ -241,6 +249,12 @@ template<typename T>
 constexpr span<T, dynamic_extent>::size_type span<T, dynamic_extent>::size() const
 {
     return _size;
+}
+
+template<typename T>
+constexpr bool span<T, dynamic_extent>::is_empty() const
+{
+    return size() == 0;
 }
 
 template<typename T>

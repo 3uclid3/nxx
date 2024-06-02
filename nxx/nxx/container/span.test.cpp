@@ -8,6 +8,7 @@ namespace nxx {
 void check(span<int> s)
 {
     REQUIRE(s.size() == 3);
+    CHECK_FALSE(s.is_empty());
     CHECK(s[0] == 1);
     CHECK(s[1] == 2);
     CHECK(s[2] == 3);
