@@ -25,7 +25,7 @@ struct output
     size_t _buffer_size{0};
 };
 
-TEST_CASE("format_to - bool", "[String]")
+TEST_CASE("format_to - bool", "[string]")
 {
     output out;
 
@@ -36,7 +36,7 @@ TEST_CASE("format_to - bool", "[String]")
     CHECK(sv == "Format a bool 'true'");
 }
 
-TEST_CASE("format_to - char", "[String]")
+TEST_CASE("format_to - char", "[string]")
 {
     output out;
 
@@ -47,7 +47,7 @@ TEST_CASE("format_to - char", "[String]")
     CHECK(sv == "Format a char 'c'");
 }
 
-TEST_CASE("format_to - s8_t", "[String]")
+TEST_CASE("format_to - s8_t", "[string]")
 {
     output out;
 
@@ -58,7 +58,7 @@ TEST_CASE("format_to - s8_t", "[String]")
     CHECK(sv == "Format a s8 '-42'");
 }
 
-TEST_CASE("format_to - u8_t", "[String]")
+TEST_CASE("format_to - u8_t", "[string]")
 {
     output out;
 
@@ -69,7 +69,7 @@ TEST_CASE("format_to - u8_t", "[String]")
     CHECK(sv == "Format a u8 '42'");
 }
 
-TEST_CASE("format_to - s16_t", "[String]")
+TEST_CASE("format_to - s16_t", "[string]")
 {
     output out;
 
@@ -80,7 +80,7 @@ TEST_CASE("format_to - s16_t", "[String]")
     CHECK(sv == "Format a s16 '-42'");
 }
 
-TEST_CASE("format_to - u16_t", "[String]")
+TEST_CASE("format_to - u16_t", "[string]")
 {
     output out;
 
@@ -91,7 +91,7 @@ TEST_CASE("format_to - u16_t", "[String]")
     CHECK(sv == "Format a u16 '42'");
 }
 
-TEST_CASE("format_to - s32_t", "[String]")
+TEST_CASE("format_to - s32_t", "[string]")
 {
     output out;
 
@@ -102,7 +102,7 @@ TEST_CASE("format_to - s32_t", "[String]")
     CHECK(sv == "Format a s32_t '-42'");
 }
 
-TEST_CASE("format_to - u32_t", "[String]")
+TEST_CASE("format_to - u32_t", "[string]")
 {
     output out;
 
@@ -113,7 +113,7 @@ TEST_CASE("format_to - u32_t", "[String]")
     CHECK(sv == "Format a u32 '42'");
 }
 
-TEST_CASE("format_to - s64_t", "[String]")
+TEST_CASE("format_to - s64_t", "[string]")
 {
     output out;
 
@@ -124,7 +124,7 @@ TEST_CASE("format_to - s64_t", "[String]")
     CHECK(sv == "Format a s64 '-42'");
 }
 
-TEST_CASE("format_to - u64_t", "[String]")
+TEST_CASE("format_to - u64_t", "[string]")
 {
     output out;
 
@@ -135,7 +135,7 @@ TEST_CASE("format_to - u64_t", "[String]")
     CHECK(sv == "Format a u64 '42'");
 }
 
-TEST_CASE("format_to - String", "[String]")
+TEST_CASE("format_to - String", "[string]")
 {
     output out;
 
@@ -146,7 +146,35 @@ TEST_CASE("format_to - String", "[String]")
     CHECK(sv == "Format a string 'A String'");
 }
 
-TEST_CASE("format_to - binary presentation", "[String]")
+TEST_CASE("format_to - pointer", "[string]")
+{
+    output out;
+
+    SECTION("void")
+    {
+        void* ptr = reinterpret_cast<void*>(0x12345678);
+
+        format_to(out, "Format a pointer '{:x}'", ptr);
+
+        string_view sv = out.view();
+
+        CHECK(sv == "Format a pointer '12345678'");
+    }
+
+    SECTION("type")
+    {
+        int* ptr = reinterpret_cast<int*>(0x12345678);
+
+        format_to(out, "Format a pointer '{:x}'", ptr);
+
+        string_view sv = out.view();
+
+        CHECK(sv == "Format a pointer '12345678'");
+    }
+    
+}
+
+TEST_CASE("format_to - binary presentation", "[string]")
 {
     output out;
 
@@ -169,7 +197,7 @@ TEST_CASE("format_to - binary presentation", "[String]")
     }
 }
 
-TEST_CASE("format_to - hex presentation", "[String]")
+TEST_CASE("format_to - hex presentation", "[string]")
 {
     output out;
 
@@ -192,7 +220,7 @@ TEST_CASE("format_to - hex presentation", "[String]")
     }
 }
 
-TEST_CASE("format_to - position", "[String]")
+TEST_CASE("format_to - position", "[string]")
 {
     output out;
 
@@ -203,7 +231,7 @@ TEST_CASE("format_to - position", "[String]")
     CHECK(sv == "Format at 1: 22; at 2 24; at 0 42");
 }
 
-TEST_CASE("format_to - finishing with {:PRESENTATION}", "[String]")
+TEST_CASE("format_to - finishing with {:PRESENTATION}", "[string]")
 {
     output out;
 

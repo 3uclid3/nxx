@@ -28,7 +28,9 @@ public:
         uint32,
         uint64,
 
-        raw_string
+        raw_string,
+
+        pointer
     };
 
     constexpr format_argument(bool v);
@@ -47,6 +49,8 @@ public:
     constexpr format_argument(const char* cstr);
     constexpr format_argument(string_view sv);
 
+    constexpr format_argument(const void* pointer);
+
     [[nodiscard]] constexpr type get_type() const;
 
     [[nodiscard]] constexpr bool as_bool() const;
@@ -63,6 +67,8 @@ public:
     [[nodiscard]] constexpr u64_t as_u64() const;
 
     [[nodiscard]] constexpr string_view as_string() const;
+
+    [[nodiscard]] constexpr const void* as_pointer() const;
 
 private:
     struct raw_string_view
@@ -87,6 +93,8 @@ private:
         u64_t u64;
 
         raw_string_view sv;
+
+        const void* pointer;
     };
 
     type _type;
@@ -179,6 +187,12 @@ constexpr format_argument::format_argument(string_view sv)
         .size = sv.size()};
 }
 
+constexpr format_argument::format_argument(const void* pointer)
+    : _type(type::pointer)
+{
+    _data.pointer = pointer;
+}
+
 constexpr format_argument::type format_argument::get_type() const
 {
     return _type;
@@ -237,6 +251,11 @@ constexpr u64_t format_argument::as_u64() const
 constexpr string_view format_argument::as_string() const
 {
     return {_data.sv.pointer, _data.sv.size};
+}
+
+constexpr const void* format_argument::as_pointer() const
+{
+    return _data.pointer;
 }
 
 } // namespace nxx

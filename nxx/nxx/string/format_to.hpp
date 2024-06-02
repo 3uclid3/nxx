@@ -87,6 +87,10 @@ void format_argument_to(OutT& out, format_specification specification, format_ar
             out.write(c);
         }
         break;
+
+    case format_argument::type::pointer:
+        write_all(out, to_string_view(reinterpret_cast<uintptr_t>(argument.as_pointer()), buffer, specification.get_decimal_base(), specification.is_upper_case()));
+        break;
     }
 }
 
