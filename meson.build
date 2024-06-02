@@ -95,6 +95,7 @@ if build_tests
         'nxx/nxx/memory/allocator/fallback_allocator.test.cpp',
         'nxx/nxx/memory/allocator/null_allocator.test.cpp',
         'nxx/nxx/memory/allocator/stack_allocator.test.cpp',
+        'nxx/nxx/memory/alignment.test.cpp',
         'nxx/nxx/memory/construct_at.test.cpp',
         'nxx/nxx/memory/memory_block.test.cpp',
         'nxx/nxx/memory/unique_ptr.test.cpp',
