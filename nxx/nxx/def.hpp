@@ -3,12 +3,16 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <ntl/def.hpp>
 #include <nxx/debug/assert.hpp>
 
 #define NXX_UNUSED(var) (void)var
 #define NXX_UNREACHABLE() __builtin_unreachable()
 
 namespace nxx {
+
+// import ntl
+using namespace ntl;
 
 using nullptr_t = decltype(nullptr);
 

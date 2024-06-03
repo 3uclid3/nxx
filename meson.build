@@ -57,12 +57,14 @@ nxx = static_library(
     sources,
     install : false,
     include_directories : ['nxx'],
+    dependencies : [dependency('ntl')],
     c_args : ['-ffreestanding', sanitizers, macros],
     cpp_args : ['-ffreestanding', sanitizers, macros]
 )
 
 nxx_dep  = declare_dependency(
    link_with : nxx,
+   dependencies : [dependency('ntl')],
    sources : sources,
    include_directories : ['nxx']
 )
