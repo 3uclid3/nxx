@@ -92,6 +92,7 @@ if build_tests
         'nxx/nxx/algorithm/none_of.test.cpp',
         'nxx/nxx/algorithm/none.test.cpp',
         'nxx/nxx/debug/assert.test.cpp',
+        'nxx/nxx/container/bitmap.test.cpp',
         'nxx/nxx/container/span.test.cpp',
         'nxx/nxx/container/static_array.test.cpp',
         'nxx/nxx/memory/allocator/fallback_allocator.test.cpp',

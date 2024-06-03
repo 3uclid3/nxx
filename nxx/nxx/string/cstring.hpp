@@ -1,8 +1,20 @@
 #pragma once
 
-#include <stddef.h>
+#include <nxx/def.hpp>
 
 namespace nxx {
+
+// TODO move to cpp
+inline void* memset(void* ptr, int val, size_t size)
+{
+    const u8_t uval = static_cast<u8_t>(val);
+    u8_t* p = reinterpret_cast<u8_t*>(ptr);
+    for (size_t i = 0; i < size; ++i)
+    {
+        p[i] = uval;
+    }
+    return ptr;
+}
 
 constexpr size_t strlen(const char* cstr)
 {
