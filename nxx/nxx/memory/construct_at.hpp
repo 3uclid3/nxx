@@ -1,7 +1,6 @@
 #pragma once
 
 #include <nxx/memory/address_of.hpp>
-#include <nxx/memory/new.hpp>
 #include <nxx/type_trait/is_static_array.hpp>
 #include <nxx/utility/forward.hpp>
 

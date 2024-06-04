@@ -16,4 +16,4 @@ void deallocate(memory_block block)
     free(block.pointer);
 }
 
-} // namespace nxx::details
+} // namespace nxx

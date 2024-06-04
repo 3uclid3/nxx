@@ -1,7 +1,6 @@
 #pragma once
 
 #include <nxx/def.hpp>
-#include <nxx/memory/new.hpp>
 #include <nxx/type_trait/add_lvalue_reference.hpp>
 #include <nxx/type_trait/is_base_of.hpp>
 #include <nxx/type_trait/is_same.hpp>
