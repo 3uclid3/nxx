@@ -77,6 +77,7 @@ if build_tests
         # utility
         'nxx/nxx/debug/assert_test_impl.cpp',
         'nxx/nxx/memory/alloc_test_impl.cpp',
+        'nxx/nxx/memory/new_test_impl.cpp',
 
         # tests
         'nxx/nxx/algorithm/all_of.test.cpp',
