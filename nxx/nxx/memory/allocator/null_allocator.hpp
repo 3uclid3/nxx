@@ -8,15 +8,17 @@ namespace nxx {
 class null_allocator
 {
 public:
-    [[nodiscard]] constexpr bool owns(const_memory_block block) const;
-    [[nodiscard]] constexpr memory_block allocate(size_t size);
-    constexpr void deallocate(memory_block block);
-};
+    static constexpr unsigned alignment = 64 * 1024;
+    static constexpr size_t max_size = 0;
 
-constexpr bool null_allocator::owns(const_memory_block block) const
-{
-    return block.is_null();
-}
+public:
+    [[nodiscard]] constexpr memory_block allocate(size_t size);
+    [[nodiscard]] constexpr bool owns(const memory_block& block) const;
+    constexpr bool expand(memory_block& block, size_t delta);
+    constexpr bool reallocate(memory_block& block, size_t new_size);
+    constexpr void deallocate(memory_block& block);
+    constexpr void deallocate_all();
+};
 
 constexpr memory_block null_allocator::allocate(size_t size)
 {
@@ -24,10 +26,35 @@ constexpr memory_block null_allocator::allocate(size_t size)
     return nullblk;
 }
 
-constexpr void null_allocator::deallocate(memory_block block)
+constexpr bool null_allocator::owns(const memory_block& block) const
+{
+    return !block;
+}
+
+constexpr bool null_allocator::expand(memory_block& block, size_t delta)
 {
     NXX_UNUSED(block);
-    NXX_ASSERT(block.is_null());
+    NXX_UNUSED(delta);
+    NXX_ASSERT(!block);
+    return false;
+}
+
+constexpr bool null_allocator::reallocate(memory_block& block, size_t new_size)
+{
+    NXX_UNUSED(block);
+    NXX_UNUSED(new_size);
+    NXX_ASSERT(!block);
+    return false;
+}
+
+constexpr void null_allocator::deallocate(memory_block& block)
+{
+    NXX_UNUSED(block);
+    NXX_ASSERT(!block);
+}
+
+constexpr void null_allocator::deallocate_all()
+{
 }
 
 } // namespace nxx

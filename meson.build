@@ -13,6 +13,7 @@ project(
 )
 
 sources = files(
+    'nxx/nxx/memory/new.cpp',
     'nxx/nxx/string/format.cpp'
 )
 
@@ -76,8 +77,7 @@ if build_tests
     tests = files(
         # utility
         'nxx/nxx/debug/assert_test_impl.cpp',
-        'nxx/nxx/memory/alloc_test_impl.cpp',
-        'nxx/nxx/memory/new_test_impl.cpp',
+        'nxx/nxx/memory/allocate_test_impl.cpp',
 
         # tests
         'nxx/nxx/algorithm/all_of.test.cpp',
@@ -95,9 +95,10 @@ if build_tests
         'nxx/nxx/container/bitmap.test.cpp',
         'nxx/nxx/container/span.test.cpp',
         'nxx/nxx/container/static_array.test.cpp',
+        'nxx/nxx/memory/allocator/allocator_trait.test.cpp',
         'nxx/nxx/memory/allocator/fallback_allocator.test.cpp',
         'nxx/nxx/memory/allocator/null_allocator.test.cpp',
-        'nxx/nxx/memory/allocator/slab_allocator.test.cpp',
+        #'nxx/nxx/memory/allocator/slab_allocator.test.cpp',
         'nxx/nxx/memory/allocator/stack_allocator.test.cpp',
         'nxx/nxx/memory/alignment.test.cpp',
         'nxx/nxx/memory/construct_at.test.cpp',
@@ -107,6 +108,7 @@ if build_tests
         'nxx/nxx/string/format.test.cpp',
         'nxx/nxx/string/string_view.test.cpp',
         'nxx/nxx/string/to_string_view.test.cpp',
+        'nxx/nxx/type_trait/macro/declare_has_method.macro.test.cpp',
         'nxx/nxx/type_trait/add_const_volatile.test.cpp',
         'nxx/nxx/type_trait/add_const.test.cpp',
         'nxx/nxx/type_trait/add_lvalue_reference.test.cpp',

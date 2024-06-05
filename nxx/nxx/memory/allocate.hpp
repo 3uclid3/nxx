@@ -6,6 +6,6 @@
 namespace nxx {
 
 memory_block allocate(size_t size);
-void deallocate(memory_block block);
+void deallocate(memory_block& block);
 
 } // namespace nxx

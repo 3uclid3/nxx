@@ -1,10 +1,12 @@
 #pragma once
 
 #include <nxx/concept/integral.hpp>
-#include <nxx/type_trait/make_unsigned.hpp>
 #include <nxx/def.hpp>
+#include <nxx/type_trait/make_unsigned.hpp>
 
 namespace nxx {
+
+inline static constexpr size_t default_alignment{16};
 
 constexpr size_t round_to_alignment(size_t size, size_t align)
 {
