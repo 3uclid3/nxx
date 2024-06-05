@@ -13,7 +13,7 @@ TEST_CASE("source_location")
 {
     CHECK(function().line() == 9);
     CHECK(function().column() == 12);
-    CHECK(function().file_name() == "../nxx/nxx/utility/source_location.test.cpp");
+    CHECK(function().file_name() == "../tests/nxx/utility/source_location.test.cpp");
     CHECK(function().function_name() == "source_location nxx::function()");
 }
 
