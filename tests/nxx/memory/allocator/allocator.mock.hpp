@@ -3,10 +3,10 @@
 #include <nxx/def.hpp>
 #include <nxx/memory/memory_block.hpp>
 
-namespace nxx {
+namespace nxx::mock {
 
 template<typename TagT>
-struct mock_basic_minimal_fallback_allocator
+struct basic_minimal_fallback_allocator
 {
     [[nodiscard]] memory_block allocate(size_t size)
     {
@@ -62,9 +62,9 @@ struct mock_basic_minimal_fallback_allocator
 };
 
 template<typename TagT>
-struct mock_basic_fallback_allocator : mock_basic_minimal_fallback_allocator<TagT>
+struct basic_fallback_allocator : basic_minimal_fallback_allocator<TagT>
 {
-    using super = mock_basic_minimal_fallback_allocator<TagT>;
+    using super = basic_minimal_fallback_allocator<TagT>;
 
     [[nodiscard]] bool owns(const memory_block& block) const
     {
@@ -107,7 +107,7 @@ struct mock_basic_fallback_allocator : mock_basic_minimal_fallback_allocator<Tag
 
 struct default_allocator_tag{};
 
-using mock_minimal_fallback_allocator = mock_basic_minimal_fallback_allocator<default_allocator_tag>;
-using mock_fallback_allocator = mock_basic_fallback_allocator<default_allocator_tag>;
+using mock_minimal_fallback_allocator = basic_minimal_fallback_allocator<default_allocator_tag>;
+using mock_fallback_allocator = basic_fallback_allocator<default_allocator_tag>;
 
 } // namespace nxx
