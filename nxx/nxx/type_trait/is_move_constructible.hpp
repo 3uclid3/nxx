@@ -5,6 +5,6 @@
 namespace nxx {
 
 template<typename T>
-inline constexpr bool is_move_constructible = __is_assignable(T, add_rvalue_reference<T>);
+inline constexpr bool is_move_constructible = __is_constructible(T, add_rvalue_reference<T>);
 
 } // namespace nxx
