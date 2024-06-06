@@ -12,15 +12,15 @@ TEST_CASE("slab_allocator allocate and deallocate objects with sizes matching sl
     slab_allocator<stack_allocator<1024>, 4, 32, 64, 128> allocator;
 
     memory_block block1 = allocator.allocate(32);
-    CHECK(block1.pointer != nullptr);
+    CHECK(block1.ptr != nullptr);
     CHECK(block1.size == 32);
 
     memory_block block2 = allocator.allocate(64);
-    CHECK(block2.pointer != nullptr);
+    CHECK(block2.ptr != nullptr);
     CHECK(block2.size == 64);
 
     memory_block block3 = allocator.allocate(128);
-    CHECK(block3.pointer != nullptr);
+    CHECK(block3.ptr != nullptr);
     CHECK(block3.size == 128);
 
     allocator.deallocate(block1);
@@ -33,15 +33,15 @@ TEST_CASE("slab_allocator allocate and deallocate objects with sizes less than s
     slab_allocator<stack_allocator<1024>, 4, 32, 64, 128> allocator;
 
     memory_block block1 = allocator.allocate(24);
-    CHECK(block1.pointer != nullptr);
+    CHECK(block1.ptr != nullptr);
     CHECK(block1.size == 24);
 
     memory_block block2 = allocator.allocate(48);
-    CHECK(block2.pointer != nullptr);
+    CHECK(block2.ptr != nullptr);
     CHECK(block2.size == 48);
 
     memory_block block3 = allocator.allocate(96);
-    CHECK(block3.pointer != nullptr);
+    CHECK(block3.ptr != nullptr);
     CHECK(block3.size == 96);
 
     allocator.deallocate(block1);
@@ -68,8 +68,10 @@ TEST_CASE("slab_allocator allocate nullblk with unsupported size", "[memory]")
 TEST_CASE("slab_allocator deallocate nullblk", "[memory]")
 {
     slab_allocator<stack_allocator<1024>, 4, 32, 64, 128> allocator;
-    allocator.deallocate(nullblk);
-    SUCCEED();
+
+    memory_block block = nullblk;
+    allocator.deallocate(block);
+    CHECK(block == nullblk);
 }
 
 TEST_CASE("slab_allocator fragmentation handling with 'random' deallocation", "[memory]")
@@ -87,7 +89,7 @@ TEST_CASE("slab_allocator fragmentation handling with 'random' deallocation", "[
     for (size_t i = 0; i < allocation_count; ++i)
     {
         blocks.push_back(allocator.allocate(32));
-        CHECK(blocks[i].pointer != nullptr);
+        CHECK(blocks[i].ptr != nullptr);
     }
 
     // Deallocate blocks in 'random' order
@@ -100,7 +102,7 @@ TEST_CASE("slab_allocator fragmentation handling with 'random' deallocation", "[
     for (size_t i = 0; i < allocation_count; ++i)
     {
         blocks[i] = allocator.allocate(32);
-        CHECK(blocks[i].pointer != nullptr);
+        CHECK(blocks[i].ptr != nullptr);
     }
 }
 
@@ -114,7 +116,7 @@ TEST_CASE("slab_allocator stress test with delayed deallocation", "[memory]")
     for (size_t i = 0; i < 1000; ++i)
     {
         blocks.push_back(allocator.allocate(i % 2 ? 32 : 64));
-        CHECK(blocks[i].pointer != nullptr);
+        CHECK(blocks[i].ptr != nullptr);
     }
 
     // Deallocate all blocks
