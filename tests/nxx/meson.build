@@ -11,6 +11,7 @@ tests = files(
     'algorithm/clamp.test.cpp',
     'algorithm/find_if.test.cpp',
     'algorithm/find.test.cpp',
+    'algorithm/iota.test.cpp',
     'algorithm/max.test.cpp',
     'algorithm/min.test.cpp',
     'algorithm/none_of.test.cpp',
