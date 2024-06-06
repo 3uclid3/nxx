@@ -1,10 +1,10 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <nxx/def.hpp>
-#include <nxx/memory/allocator/allocator_trait.hpp>
+#include <nxx/memory/allocator/allocator_traits.hpp>
 #include <nxx/memory/memory_block.hpp>
 
-namespace nxx::allocator_trait {
+namespace nxx::allocator_traits {
 
 struct empty_allocator
 {

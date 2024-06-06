@@ -12,7 +12,6 @@ class stack_allocator
 public:
     using allocator = stack_allocator<SizeT, AlignmentT>;
 
-    static constexpr bool supports_truncated_deallocation = true;
     static constexpr size_t alignment = AlignmentT;
     static constexpr size_t max_size = SizeT;
 

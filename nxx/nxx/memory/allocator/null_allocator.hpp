@@ -8,8 +8,7 @@ namespace nxx {
 class null_allocator
 {
 public:
-    static constexpr unsigned alignment = 64 * 1024;
-    static constexpr size_t max_size = 0;
+    static constexpr size_t alignment = 64 * 1024;
 
 public:
     [[nodiscard]] constexpr memory_block allocate(size_t size);

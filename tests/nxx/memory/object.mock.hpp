@@ -1,190 +1,183 @@
 #pragma once
 
+#include <nxx/def.hpp>
+
 namespace nxx::mock {
 
-template<typename ConcreteT>
-struct base_object
+template<typename TagT, typename SizeT = size_t>
+struct basic_object
 {
-    bool ctor_default : 1 {false};
-    bool ctor_copy : 1 {false};
-    bool ctor_move : 1 {false};
-    bool otor_copy : 1 {false};
-    bool otor_move : 1 {false};
-
-    inline static void reset_counts()
+    static void reset_mock()
     {
-        ctor_count = 0;
-        dtor_count = 0;
-        move_count = 0;
-        copy_count = 0;
+        total_ctor_default_count = 0;
+        total_ctor_copy_count = 0;
+        total_ctor_move_count = 0;
+        total_otor_copy_count = 0;
+        total_otor_move_count = 0;
+        total_dtor_count = 0;
     }
 
-    inline static int ctor_count = 0;
-    inline static int dtor_count = 0;
-    inline static int move_count = 0;
-    inline static int copy_count = 0;
-};
-
-struct object : base_object<object>
-{
-    object()
+    basic_object()
     {
-        ctor_default = true;
+        ctor_default_called = true;
 
-        ++ctor_count;
+        ++ctor_default_count;
+        ++total_ctor_default_count;
     }
 
-    explicit object(int initialValue)
-        : value(initialValue)
-        , ctorInt(true)
+    basic_object(const basic_object& other)
     {
-        ++ctor_count;
+        ctor_copy_called = true;
+
+        ctor_default_count = other.ctor_default_count;
+        ctor_copy_count = other.ctor_copy_count;
+        ctor_move_count = other.ctor_move_count;
+        otor_copy_count = other.otor_copy_count;
+        otor_move_count = other.otor_move_count;
+
+        ++ctor_copy_count;
+        ++total_ctor_copy_count;
     }
 
-    object(const object& other)
-        : value(other.value)
+    basic_object(basic_object&& other)
     {
-        ctor_copy = true;
-        ++ctor_count;
-        ++copy_count;
+        ctor_move_called = true;
+
+        ctor_default_count = other.ctor_default_count;
+        ctor_copy_count = other.ctor_copy_count;
+        ctor_move_count = other.ctor_move_count;
+        otor_copy_count = other.otor_copy_count;
+        otor_move_count = other.otor_move_count;
+
+        ++ctor_move_count;
+        ++total_ctor_move_count;
+
+        other.ctor_default_count = 0;
+        other.ctor_copy_count = 0;
+        other.ctor_move_count = 0;
+        other.otor_copy_count = 0;
+        other.otor_move_count = 0;
     }
 
-    object(object&& other)
-        : value(other.value)
+    ~basic_object()
     {
-        ctor_move = true;
-        ++ctor_count;
-        ++move_count;
+        if (dtor_called != nullptr)
+        {
+            *dtor_called = true;
+        }
+        ++total_dtor_count;
     }
 
-    ~object()
+    basic_object& operator=(const basic_object& other)
     {
-        ++dtor_count;
-    }
+        otor_copy_called = true;
 
-    object& operator=(const object& other)
-    {
-        value = other.value;
-        otor_copy = true;
-        ++copy_count;
+        ctor_default_count = other.ctor_default_count;
+        ctor_copy_count = other.ctor_copy_count;
+        ctor_move_count = other.ctor_move_count;
+        otor_copy_count = other.otor_copy_count;
+        otor_move_count = other.otor_move_count;
+
+        ++otor_copy_count;
+        ++total_otor_copy_count;
+
         return *this;
     }
 
-    object& operator=(object&& other)
+    basic_object& operator=(basic_object&& other)
     {
-        value = other.value;
-        otor_move = true;
-        ++move_count;
+        otor_move_called = true;
+
+        ctor_default_count = other.ctor_default_count;
+        ctor_copy_count = other.ctor_copy_count;
+        ctor_move_count = other.ctor_move_count;
+        otor_copy_count = other.otor_copy_count;
+        otor_move_count = other.otor_move_count;
+
+        ++otor_move_count;
+        ++total_otor_move_count;
+
+        other.ctor_default_count = 0;
+        other.ctor_copy_count = 0;
+        other.ctor_move_count = 0;
+        other.otor_copy_count = 0;
+        other.otor_move_count = 0;
+
         return *this;
     }
 
-    bool operator==(const object& other) const
-    {
-        return value == other.value;
-    }
+    SizeT ctor_default_count{0};
+    SizeT ctor_copy_count{0};
+    SizeT ctor_move_count{0};
+    SizeT otor_copy_count{0};
+    SizeT otor_move_count{0};
 
-    int value{-1};
-    bool ctorInt : 1 {false};
+    bool ctor_default_called : 1 {false};
+    bool ctor_copy_called : 1 {false};
+    bool ctor_move_called : 1 {false};
+    bool otor_copy_called : 1 {false};
+    bool otor_move_called : 1 {false};
+
+    bool* dtor_called{nullptr};
+
+    inline static SizeT total_ctor_default_count = 0;
+    inline static SizeT total_ctor_copy_count = 0;
+    inline static SizeT total_ctor_move_count = 0;
+    inline static SizeT total_otor_copy_count = 0;
+    inline static SizeT total_otor_move_count = 0;
+    inline static SizeT total_dtor_count = 0;
 };
 
-struct copy_only_object : base_object<copy_only_object>
+template<typename TagT, typename SizeT = size_t>
+struct basic_copy_only_object : basic_object<TagT>
 {
-    constexpr copy_only_object() = default;
-    constexpr copy_only_object(int initialValue)
-        : value(initialValue)
-    {
-        ctorInt = true;
-    }
-
-    constexpr copy_only_object(const copy_only_object& other)
-        : value(other.value)
-    {
-        ctor_copy = true;
-    }
-
-    ~copy_only_object()
-    {
-        ++dtor_count;
-    }
-
-    constexpr copy_only_object(copy_only_object&& other) = delete;
-
-    constexpr copy_only_object& operator=(const copy_only_object& other)
-    {
-        value = other.value;
-        operatorCopy = true;
-        return *this;
-    }
-
-    constexpr copy_only_object& operator=(copy_only_object&& other) = delete;
-
-    int value{-1};
-    bool ctorInt : 1 {false};
-    bool ctor_copy : 1 {false};
-    bool operatorCopy : 1 {false};
-
-    inline static int dtor_count = 0;
+    constexpr basic_copy_only_object(basic_copy_only_object&&) = delete;
+    constexpr basic_copy_only_object& operator=(basic_copy_only_object&&) = delete;
 };
 
-struct move_only_object : base_object<copy_only_object>
+template<typename TagT, typename SizeT = size_t>
+struct basic_move_only_object : basic_object<TagT>
 {
-    constexpr move_only_object() = default;
-    constexpr move_only_object(int initialValue)
-        : value(initialValue)
-    {
-        ctorInt = true;
-    }
-
-    constexpr move_only_object(const move_only_object& other) = delete;
-
-    constexpr move_only_object(move_only_object&& other)
-        : value(other.value)
-    {
-        ctor_move = true;
-    }
-
-    ~move_only_object()
-    {
-        ++dtor_count;
-    }
-
-    constexpr move_only_object& operator=(const move_only_object& other) = delete;
-
-    constexpr move_only_object& operator=(move_only_object&& other)
-    {
-        value = other.value;
-        operatorMove = true;
-        return *this;
-    }
-
-    int value{-1};
-    bool ctorInt : 1 {false};
-    bool ctor_move : 1 {false};
-    bool operatorMove : 1 {false};
-
-    inline static int dtor_count = 0;
+    constexpr basic_move_only_object(const basic_move_only_object&) = delete;
+    constexpr basic_move_only_object& operator=(const basic_move_only_object&) = delete;
 };
 
-struct trivial_object
+template<typename TagT, typename SizeT = size_t>
+struct basic_object_fixture
 {
-    int value{0};
+    basic_object_fixture()
+    {
+        basic_object<TagT, SizeT>::reset_mock();
+    }
 };
 
-struct object_fixture
+template<typename TagT, typename SizeT = size_t>
+struct basic_copy_only_object_fixture
 {
-    object_fixture()
+    basic_copy_only_object_fixture()
     {
-        object::reset_counts();
-        copy_only_object::reset_counts();
-        move_only_object::reset_counts();
-    }
-
-    virtual ~object_fixture()
-    {
-        object::reset_counts();
-        copy_only_object::reset_counts();
-        move_only_object::reset_counts();
+        basic_copy_only_object<TagT, SizeT>::reset_mock();
     }
 };
+
+template<typename TagT, typename SizeT = size_t>
+struct basic_move_only_object_fixture
+{
+    basic_move_only_object_fixture()
+    {
+        basic_move_only_object<TagT, SizeT>::reset_mock();
+    }
+};
+
+struct default_object_tag
+{};
+
+using object = basic_object<default_object_tag>;
+using copy_only_object = basic_copy_only_object<default_object_tag>;
+using move_only_object = basic_move_only_object<default_object_tag>;
+
+using object_fixture = basic_object_fixture<default_object_tag>;
+using copy_only_object_fixture = basic_copy_only_object_fixture<default_object_tag>;
+using move_only_object_fixture = basic_move_only_object_fixture<default_object_tag>;
 
 } // namespace nxx::mock

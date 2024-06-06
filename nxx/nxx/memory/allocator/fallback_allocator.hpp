@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nxx/memory/allocator/allocator_trait.hpp>
+#include <nxx/memory/allocator/allocator_traits.hpp>
 #include <nxx/memory/memory_block.hpp>
 
 namespace nxx {
@@ -12,24 +12,23 @@ public:
     using primary = PrimaryAllocatorT;
     using fallback = FallbackAllocatorT;
 
-    static constexpr bool supports_truncated_deallocation = primary::supports_truncated_deallocation || fallback::supports_truncated_deallocation;
-    static constexpr unsigned alignment = primary::alignment > fallback::alignment ? primary::alignment : fallback::alignment;
+    static constexpr size_t alignment = primary::alignment > fallback::alignment ? primary::alignment : fallback::alignment;
 
 public:
     [[nodiscard]] constexpr memory_block allocate(size_t size);
 
     template<typename U = PrimaryAllocatorT, typename V = FallbackAllocatorT>
-    requires(allocator_trait::has_owns<U> && allocator_trait::has_owns<V>)
+    requires(allocator_traits::has_owns<U> && allocator_traits::has_owns<V>)
     [[nodiscard]] constexpr bool owns(const memory_block& block) const;
 
     template<typename U = PrimaryAllocatorT, typename V = FallbackAllocatorT>
-    requires(allocator_trait::has_expand<U> || allocator_trait::has_expand<V>)
+    requires(allocator_traits::has_expand<U> || allocator_traits::has_expand<V>)
     constexpr bool expand(memory_block& block, size_t delta);
     constexpr bool reallocate(memory_block& block, size_t new_size);
     constexpr void deallocate(memory_block& block);
 
     template<typename U = PrimaryAllocatorT, typename V = FallbackAllocatorT>
-    requires(allocator_trait::has_deallocate_all<U> && allocator_trait::has_deallocate_all<V>)
+    requires(allocator_traits::has_deallocate_all<U> && allocator_traits::has_deallocate_all<V>)
     constexpr void deallocate_all();
 };
 
@@ -51,7 +50,7 @@ constexpr memory_block fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>
 
 template<typename PrimaryAllocatorT, typename FallbackAllocatorT>
 template<typename U, typename V>
-requires(allocator_trait::has_owns<U> && allocator_trait::has_owns<V>)
+requires(allocator_traits::has_owns<U> && allocator_traits::has_owns<V>)
 constexpr bool fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::owns(const memory_block& block) const
 {
     return primary::owns(block) || fallback::owns(block);
@@ -59,10 +58,10 @@ constexpr bool fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::owns(c
 
 template<typename PrimaryAllocatorT, typename FallbackAllocatorT>
 template<typename U, typename V>
-requires(allocator_trait::has_expand<U> || allocator_trait::has_expand<V>)
+requires(allocator_traits::has_expand<U> || allocator_traits::has_expand<V>)
 constexpr bool fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::expand(memory_block& block, size_t delta)
 {
-    if constexpr (allocator_trait::has_expand<primary>)
+    if constexpr (allocator_traits::has_expand<primary>)
     {
         if (primary::owns(block))
         {
@@ -70,7 +69,7 @@ constexpr bool fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::expand
         }
     }
 
-    if constexpr (allocator_trait::has_expand<fallback>)
+    if constexpr (allocator_traits::has_expand<fallback>)
     {
         return fallback::expand(block, delta);
     }
@@ -123,7 +122,7 @@ constexpr void fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::deallo
 
 template<typename PrimaryAllocatorT, typename FallbackAllocatorT>
 template<typename U, typename V>
-requires(allocator_trait::has_deallocate_all<U> && allocator_trait::has_deallocate_all<V>)
+requires(allocator_traits::has_deallocate_all<U> && allocator_traits::has_deallocate_all<V>)
 constexpr void fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::deallocate_all()
 {
     primary::deallocate_all();

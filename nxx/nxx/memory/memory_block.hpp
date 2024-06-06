@@ -18,6 +18,9 @@ struct memory_block
     [[nodiscard]] constexpr operator bool() const;
     [[nodiscard]] constexpr bool operator==(const memory_block& other) const;
 
+    template<typename T>
+    [[nodiscard]] constexpr T* as() const;
+
     void* ptr{nullptr};
     size_t size{0};
 };
@@ -49,6 +52,12 @@ constexpr memory_block::operator bool() const
 constexpr bool memory_block::operator==(const memory_block& other) const
 {
     return ptr == other.ptr && size == other.size;
+}
+
+template<typename T>
+constexpr T* memory_block::as() const
+{
+    return static_cast<T*>(ptr);
 }
 
 inline static constexpr memory_block nullblk{nullptr, 0};
