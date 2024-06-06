@@ -16,54 +16,6 @@ struct no_memory_affix
 {
 };
 
-enum class memory_affix_type
-{
-    prefix,
-    suffix
-};
-
-template<typename AllocatorT, typename AffixT, memory_affix_type AffixTypeT>
-struct affix_replacer
-{
-    affix_replacer(AllocatorT& allocator, const memory_block& outer_block)
-        : cache(move(*affix_getter(allocator, outer_block)))
-    {
-        destroy_at(affix_getter(allocator, outer_block));
-    }
-
-    constexpr void replace(AllocatorT& allocator, const memory_block& outer_block)
-    {
-        construct_at(affix_getter(allocator, outer_block), move(cache));
-    }
-
-    AffixT* affix_getter(AllocatorT& allocator, const memory_block& outer_block)
-    {
-        if constexpr (AffixTypeT == memory_affix_type::prefix)
-        {
-            return allocator.get_prefix(outer_block);
-        }
-        else if constexpr (AffixTypeT == memory_affix_type::suffix)
-        {
-            return allocator.get_suffix(outer_block);
-        }
-        return nullptr;
-    }
-
-    AffixT cache;
-};
-
-template<typename AllocatorT, memory_affix_type AffixTypeT>
-struct affix_replacer<AllocatorT, no_memory_affix, AffixTypeT>
-{
-    constexpr affix_replacer(AllocatorT&, const memory_block&)
-    {
-    }
-
-    constexpr void replace(AllocatorT&, const memory_block&)
-    {
-    }
-};
-
 template<typename AllocatorT, typename PrefixT, typename SuffixT = no_memory_affix>
 class affix_allocator : private AllocatorT
 {
@@ -102,6 +54,58 @@ public:
 
     constexpr prefix* get_prefix(const memory_block& outer_block);
     constexpr suffix* get_suffix(const memory_block& outer_block);
+
+private:
+    enum class affix_type
+    {
+        prefix,
+        suffix
+    };
+
+    template<typename AffixT, affix_type AffixTypeT>
+    struct affix_mover
+    {
+        affix_mover(affix_allocator& allocator, const memory_block& outer_block)
+            : cache(move(*affix_getter(allocator, outer_block)))
+        {
+            destroy_at(affix_getter(allocator, outer_block));
+        }
+
+        constexpr void move_to(affix_allocator& allocator, const memory_block& outer_block)
+        {
+            construct_at(affix_getter(allocator, outer_block), move(cache));
+        }
+
+        AffixT* affix_getter(affix_allocator& allocator, const memory_block& outer_block)
+        {
+            if constexpr (AffixTypeT == affix_type::prefix)
+            {
+                return allocator.get_prefix(outer_block);
+            }
+            else if constexpr (AffixTypeT == affix_type::suffix)
+            {
+                return allocator.get_suffix(outer_block);
+            }
+            return nullptr;
+        }
+
+        AffixT cache;
+    };
+
+    template<affix_type AffixTypeT>
+    struct affix_mover<no_memory_affix, AffixTypeT>
+    {
+        constexpr affix_mover(affix_allocator&, const memory_block&)
+        {
+        }
+
+        constexpr void move_to(affix_allocator&, const memory_block&)
+        {
+        }
+    };
+
+    using prefix_mover = affix_mover<PrefixT, affix_type::prefix>;
+    using suffix_mover = affix_mover<SuffixT, affix_type::suffix>;
 };
 
 template<typename AllocatorT, typename PrefixT, typename SuffixT>
@@ -151,14 +155,14 @@ constexpr bool affix_allocator<AllocatorT, PrefixT, SuffixT>::expand(memory_bloc
     }
 
     memory_block outer_block = to_outer_block(block);
-    affix_replacer<affix_allocator, suffix, affix_type::suffix> suffix_replacer{*this, outer_block};
+    suffix_mover suffix_mover{*this, outer_block};
 
     if (!allocator::expand(outer_block, delta))
     {
         return false;
     }
 
-    suffix_replacer.replace(*this, outer_block);
+    suffix_mover.move_to(*this, outer_block);
     block = to_inner_block(outer_block);
     return true;
 }
@@ -185,13 +189,13 @@ constexpr bool affix_allocator<AllocatorT, PrefixT, SuffixT>::reallocate(memory_
 
     memory_block outer_block = to_outer_block(block);
 
-    affix_replacer<affix_allocator, prefix, affix_type::prefix> prefix_replacer{*this, outer_block};
-    affix_replacer<affix_allocator, suffix, affix_type::suffix> suffix_replacer{*this, outer_block};
+    prefix_mover prefix_mover{*this, outer_block};
+    suffix_mover suffix_mover{*this, outer_block};
 
     const bool reallocate_result = allocator::reallocate(outer_block, new_size + prefix_size + suffix_size);
 
-    prefix_replacer.replace(*this, outer_block);
-    suffix_replacer.replace(*this, outer_block);
+    prefix_mover.move_to(*this, outer_block);
+    suffix_mover.move_to(*this, outer_block);
 
     if (!reallocate_result)
     {
@@ -223,13 +227,13 @@ constexpr void affix_allocator<AllocatorT, PrefixT, SuffixT>::deallocate(memory_
 template<typename AllocatorT, typename PrefixT, typename SuffixT>
 constexpr memory_block affix_allocator<AllocatorT, PrefixT, SuffixT>::to_inner_block(const memory_block& block) const
 {
-    return memory_block{static_cast<u8_t*>(block.ptr) + prefix_size, block.size - prefix_size - suffix_size};
+    return memory_block{block.as<u8_t>() + prefix_size, block.size - prefix_size - suffix_size};
 }
 
 template<typename AllocatorT, typename PrefixT, typename SuffixT>
 constexpr memory_block affix_allocator<AllocatorT, PrefixT, SuffixT>::to_outer_block(const memory_block& block) const
 {
-    return memory_block{static_cast<u8_t*>(block.ptr) - prefix_size, block.size + prefix_size + suffix_size};
+    return memory_block{block.as<u8_t>() - prefix_size, block.size + prefix_size + suffix_size};
 }
 
 template<typename AllocatorT, typename PrefixT, typename SuffixT>
@@ -247,7 +251,8 @@ constexpr const affix_allocator<AllocatorT, PrefixT, SuffixT>::suffix* affix_all
 {
     if constexpr (suffix_size > 0)
     {
-        return static_cast<suffix*>(static_cast<void*>(static_cast<u8_t*>(outer_block.ptr) + prefix_size + to_inner_block(outer_block).size));
+        void* void_ptr = outer_block.as<u8_t>() + prefix_size + to_inner_block(outer_block).size;
+        return static_cast<suffix*>(void_ptr);
     }
     return nullptr;
 }
