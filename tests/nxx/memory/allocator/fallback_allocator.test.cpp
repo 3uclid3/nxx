@@ -26,6 +26,14 @@ struct fallback_allocator_fixture : allocator_fixture<mock_fallback_allocator>
     }
 };
 
+TEST_CASE_METHOD(fallback_allocator_fixture, "fallback_allocator allocate zero returns nullblk", "[memory]")
+{
+    mock_fallback_allocator allocator;
+    memory_block block = allocator.allocate(0);
+
+    CHECK(block == nullblk);
+}
+
 TEST_CASE_METHOD(fallback_allocator_fixture, "fallback_allocator allocate with primary allocator", "[memory]")
 {
     mock_fallback_allocator allocator;
@@ -48,6 +56,15 @@ TEST_CASE_METHOD(fallback_allocator_fixture, "fallback_allocator allocate with f
     CHECK(mock_fallback::allocate_block == allocated_block);
     CHECK(mock_fallback::allocate_count == 1);
     CHECK(mock_primary::allocate_count == 1);
+}
+
+TEST_CASE_METHOD(fallback_allocator_fixture, "fallback_allocator deallocate nullblk does nothing", "[memory]")
+{
+    mock_fallback_allocator allocator;
+    memory_block block = nullblk;
+    allocator.deallocate(block);
+
+    CHECK(block == nullblk);
 }
 
 TEST_CASE_METHOD(fallback_allocator_fixture, "fallback_allocator deallocate owned by primary allocator", "[memory]")
