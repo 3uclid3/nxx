@@ -3,11 +3,11 @@
 #include <nxx/container/span.hpp>
 #include <nxx/container/static_array.hpp>
 #include <nxx/def.hpp>
-#include <nxx/string/cstring.hpp>
 #include <nxx/string/format_argument.hpp>
 #include <nxx/string/format_specification.hpp>
 #include <nxx/string/string_view.hpp>
 #include <nxx/string/to_string_view.hpp>
+#include <nxx/string/utility.hpp>
 
 namespace nxx {
 

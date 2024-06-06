@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nxx/string/cstring.hpp>
+#include <nxx/memory/utility.hpp>
 
 namespace nxx {
 

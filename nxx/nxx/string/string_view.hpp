@@ -2,7 +2,7 @@
 
 #include <nxx/algorithm/min.hpp>
 #include <nxx/def.hpp>
-#include <nxx/string/cstring.hpp>
+#include <nxx/string/utility.hpp>
 
 namespace nxx {
 
