@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-inline static constexpr size_t default_alignment{16};
+inline static constexpr size_t default_alignment{8};
 
 constexpr size_t round_to_alignment(size_t size, size_t align)
 {

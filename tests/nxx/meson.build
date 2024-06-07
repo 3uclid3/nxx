@@ -24,6 +24,7 @@ tests = files(
     'container/bitmap.test.cpp',
     'container/span.test.cpp',
     'container/static_array.test.cpp',
+    'memory/allocator/affix/memory_corruption_detector.test.cpp',
     'memory/allocator/affix_allocator.test.cpp',
     'memory/allocator/allocator_traits.test.cpp',
     'memory/allocator/fallback_allocator.test.cpp',

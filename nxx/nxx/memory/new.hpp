@@ -40,4 +40,8 @@ inline void operator delete[](void* ptr, void* place) noexcept
     NXX_UNUSED(place);
 }
 
+#else
+
+#include <new>
+
 #endif

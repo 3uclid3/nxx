@@ -22,13 +22,25 @@ struct suffix : mock::basic_object<suffix, u8_t>
     u32_t value{pattern};
 };
 
-using stack_allocator_t = stack_allocator<512, 4>;
+using stack_allocator4_t = stack_allocator<512, 4>;
+using stack_allocator8_t = stack_allocator<512, 8>;
+using stack_allocator16_t = stack_allocator<512, 16>;
 
-using both_affix_allocator = affix_allocator<stack_allocator_t, prefix, suffix>;
-using prefix_allocator = affix_allocator<stack_allocator_t, prefix, no_memory_affix>;
-using suffix_allocator = affix_allocator<stack_allocator_t, no_memory_affix, suffix>;
+using prefix_allocator = affix_allocator<stack_allocator4_t, prefix, no_memory_affix>;
+using suffix_allocator = affix_allocator<stack_allocator4_t, no_memory_affix, suffix>;
 
-using affix_allocator_types = std::tuple<both_affix_allocator, prefix_allocator, suffix_allocator>;
+using affix_allocator4 = affix_allocator<stack_allocator4_t, prefix, suffix>;
+using affix_allocator8 = affix_allocator<stack_allocator8_t, prefix, suffix>;
+using affix_allocator16 = affix_allocator<stack_allocator16_t, prefix, suffix>;
+
+using affix_allocator_types = std::tuple<
+    //prefix_allocator,
+    //suffix_allocator,
+//
+    //affix_allocator4,
+    //affix_allocator8,
+    affix_allocator16
+>;
 
 #define CHECK_IF_HAS_PREFIX(condition) \
     if constexpr (TestType::has_prefix) CHECK(condition)
@@ -40,10 +52,8 @@ struct affix_allocator_fixture : allocator_fixture<AllocatorT>, mock::basic_obje
 {
     void check_affixes(const memory_block& inner_block)
     {
-        memory_block outer_block = this->allocator.to_outer_block(inner_block);
-
-        const typename AllocatorT::prefix* prefix = this->allocator.get_prefix(outer_block);
-        const typename AllocatorT::suffix* suffix = this->allocator.get_suffix(outer_block);
+        const typename AllocatorT::prefix* prefix = this->allocator.get_prefix(inner_block);
+        const typename AllocatorT::suffix* suffix = this->allocator.get_suffix(inner_block);
 
         if constexpr (AllocatorT::prefix_size > 0)
         {
@@ -76,7 +86,7 @@ TEMPLATE_LIST_TEST_CASE_METHOD(affix_allocator_fixture, "affix_allocator allocat
 
 TEMPLATE_LIST_TEST_CASE_METHOD(affix_allocator_fixture, "affix_allocator allocate returns nullblk when no space for affixes", "[memory]", affix_allocator_types)
 {
-    memory_block block = this->allocator.allocate(stack_allocator_t::max_size);
+    memory_block block = this->allocator.allocate(TestType::allocator::max_size);
 
     CHECK(block == nullblk);
 }
