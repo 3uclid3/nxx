@@ -36,7 +36,7 @@ using affix_allocator_types = std::tuple<both_affix_allocator, prefix_allocator,
     if constexpr (TestType::has_suffix) CHECK(condition)
 
 template<typename AllocatorT>
-struct affix_allocator_fixture : allocator_fixture<AllocatorT>, mock::basic_object_fixture<prefix, u8_t>, mock::basic_object_fixture<suffix, u8_t>
+struct affix_allocator_fixture : allocator_fixture<AllocatorT>, mock::basic_object_fixture<prefix>, mock::basic_object_fixture<suffix>
 {
     void check_affixes(const memory_block& inner_block)
     {
