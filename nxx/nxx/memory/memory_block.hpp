@@ -46,7 +46,7 @@ constexpr memory_block& memory_block::operator=(memory_block&& other)
 
 constexpr memory_block::operator bool() const
 {
-    return size != 0;
+    return ptr != nullptr;
 }
 
 constexpr bool memory_block::operator==(const memory_block& other) const
