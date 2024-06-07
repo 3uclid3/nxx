@@ -94,7 +94,7 @@ constexpr array_object<T, SizeT>::~array_object()
 {
     clear();
 
-    memory_block block(super::_buffer, super::_size * sizeof(T));
+    memory_block block(super::_buffer, super::_capacity * sizeof(T));
     deallocate(block);
 }
 
