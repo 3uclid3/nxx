@@ -12,12 +12,12 @@ struct primary_tag
 struct fallback_tag
 {};
 
-using mock_fallback_allocator = fallback_allocator<mock::basic_fallback_allocator<primary_tag>, mock::basic_fallback_allocator<fallback_tag>>;
+using mock_fallback_allocator = fallback_allocator<mock::basic_allocator<primary_tag>, mock::basic_allocator<fallback_tag>>;
 
 struct fallback_allocator_fixture : allocator_fixture<mock_fallback_allocator>
 {
-    using mock_primary = mock::basic_fallback_allocator<primary_tag>;
-    using mock_fallback = mock::basic_fallback_allocator<fallback_tag>;
+    using mock_primary = mock::basic_allocator<primary_tag>;
+    using mock_fallback = mock::basic_allocator<fallback_tag>;
 
     fallback_allocator_fixture()
     {

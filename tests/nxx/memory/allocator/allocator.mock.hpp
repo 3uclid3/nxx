@@ -6,7 +6,7 @@
 namespace nxx::mock {
 
 template<typename TagT>
-struct basic_minimal_fallback_allocator
+struct basic_minimal_allocator
 {
     [[nodiscard]] memory_block allocate(size_t size)
     {
@@ -26,19 +26,20 @@ struct basic_minimal_fallback_allocator
         if (will_reallocate)
         {
             block = reallocate_block;
-            ++reallocate_count;
         }
+        ++reallocate_count;
         return will_reallocate;
     }
 
-    void deallocate(memory_block block)
+    void deallocate(memory_block& block)
     {
         if (will_deallocate)
         {
             block = nullblk;
-            ++deallocate_count;
         }
+        ++deallocate_count;
     }
+
     static void reset_mock()
     {
         will_allocate = true;
@@ -62,13 +63,14 @@ struct basic_minimal_fallback_allocator
 };
 
 template<typename TagT>
-struct basic_fallback_allocator : basic_minimal_fallback_allocator<TagT>
+struct basic_allocator : basic_minimal_allocator<basic_allocator<TagT>>
 {
-    using super = basic_minimal_fallback_allocator<TagT>;
+    using super = basic_minimal_allocator<basic_allocator<TagT>>;
 
     [[nodiscard]] bool owns(const memory_block& block) const
     {
         NXX_UNUSED(block);
+        ++owns_count;
         return will_owns;
     }
 
@@ -79,6 +81,7 @@ struct basic_fallback_allocator : basic_minimal_fallback_allocator<TagT>
         {
             block = expand_block;
         }
+        ++expand_count;
         return will_expand;
     }
 
@@ -94,6 +97,7 @@ struct basic_fallback_allocator : basic_minimal_fallback_allocator<TagT>
         will_owns = false;
         will_expand = true;
         expand_block = nullblk;
+        owns_count = 0;
         expand_count = 0;
         deallocate_all_count = 0;
     }
@@ -101,13 +105,15 @@ struct basic_fallback_allocator : basic_minimal_fallback_allocator<TagT>
     inline static bool will_owns{false};
     inline static bool will_expand{true};
     inline static memory_block expand_block{nullblk};
+    inline static size_t owns_count{0};
     inline static size_t expand_count{0};
     inline static size_t deallocate_all_count{0};
 };
 
-struct default_allocator_tag{};
+struct default_allocator_tag
+{};
 
-using mock_minimal_fallback_allocator = basic_minimal_fallback_allocator<default_allocator_tag>;
-using mock_fallback_allocator = basic_fallback_allocator<default_allocator_tag>;
+using minimal_allocator = basic_minimal_allocator<default_allocator_tag>;
+using allocator = basic_allocator<default_allocator_tag>;
 
-} // namespace nxx
+} // namespace nxx::mock
