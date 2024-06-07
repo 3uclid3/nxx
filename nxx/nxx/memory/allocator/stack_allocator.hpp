@@ -2,6 +2,7 @@
 
 #include <nxx/container/static_array.hpp>
 #include <nxx/memory/alignment.hpp>
+#include <nxx/memory/allocator/allocator_reallocation.hpp>
 #include <nxx/memory/memory_block.hpp>
 
 namespace nxx {
@@ -78,21 +79,9 @@ constexpr void stack_allocator<SizeT, AlignmentT>::deallocate(memory_block& bloc
 template<size_t SizeT, size_t AlignmentT>
 constexpr bool stack_allocator<SizeT, AlignmentT>::reallocate(memory_block& block, size_t new_size)
 {
-    if (block.size == new_size)
+    if (try_default_reallocate(*this, block, new_size))
     {
-        return true;
-    }
-
-    if (new_size == 0)
-    {
-        deallocate(block);
-        return true;
-    }
-
-    if (!block)
-    {
-        block = allocate(new_size);
-        return true;
+        return block;
     }
 
     const size_t aligned_size = round_to_alignment(new_size, AlignmentT);

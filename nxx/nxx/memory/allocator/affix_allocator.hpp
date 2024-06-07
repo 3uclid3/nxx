@@ -3,6 +3,7 @@
 #include <nxx/def.hpp>
 #include <nxx/memory/alignment.hpp>
 #include <nxx/memory/allocator/allocator_traits.hpp>
+#include <nxx/memory/allocator/allocator_reallocation.hpp>
 #include <nxx/memory/construct_at.hpp>
 #include <nxx/memory/memory_block.hpp>
 #include <nxx/memory/voidify.hpp>
@@ -185,21 +186,9 @@ constexpr bool affix_allocator<AllocatorT, PrefixT, SuffixT>::expand(memory_bloc
 template<typename AllocatorT, typename PrefixT, typename SuffixT>
 constexpr bool affix_allocator<AllocatorT, PrefixT, SuffixT>::reallocate(memory_block& block, size_t new_size)
 {
-    if (block.size == new_size)
+    if (try_default_reallocate(*this, block, new_size))
     {
-        return true;
-    }
-
-    if (new_size == 0)
-    {
-        deallocate(block);
-        return true;
-    }
-
-    if (!block)
-    {
-        block = allocate(new_size);
-        return true;
+        return block;
     }
 
     memory_block outer_block = unaligned_inner_to_outer(block);

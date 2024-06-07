@@ -2,6 +2,7 @@
 
 #include <nxx/container/static_array.hpp>
 #include <nxx/def.hpp>
+#include <nxx/memory/allocator/allocator_reallocation.hpp>
 #include <nxx/memory/allocator/allocator_traits.hpp>
 #include <nxx/memory/memory_block.hpp>
 
@@ -142,20 +143,8 @@ constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::expan
 template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
 constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::reallocate(memory_block& block, size_t new_size)
 {
-    if (new_size > max_size)
+    if (try_default_reallocate(*this, block, new_size))
     {
-        return false;
-    }
-
-    if (new_size == 0)
-    {
-        deallocate(block);
-        return true;
-    }
-
-    if (!block)
-    {
-        block = allocate(new_size);
         return block;
     }
 
