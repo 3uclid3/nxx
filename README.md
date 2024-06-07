@@ -8,4 +8,4 @@
 
 </div>
 
-C++ freestandy non-standard library
+C++ freestanding non-standard library
