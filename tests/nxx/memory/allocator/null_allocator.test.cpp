@@ -5,6 +5,14 @@
 
 namespace nxx {
 
+TEST_CASE("null_allocator allocate nullblk", "[memory]")
+{
+    size_t size = GENERATE(4, 8, 12, 16, 32);
+
+    null_allocator allocator;
+    CHECK(allocator.allocate(size) == nullblk);
+}
+
 TEST_CASE("null_allocator owns nullblk", "[memory]")
 {
     null_allocator allocator;
@@ -12,14 +20,6 @@ TEST_CASE("null_allocator owns nullblk", "[memory]")
 
     CHECK(allocator.owns(nullblk));
     CHECK_FALSE(allocator.owns(block));
-}
-
-TEST_CASE("null_allocator allocate nullblk", "[memory]")
-{
-    size_t size = GENERATE(4, 8, 12, 16, 32);
-
-    null_allocator allocator;
-    CHECK(allocator.allocate(size) == nullblk);
 }
 
 TEST_CASE("null_allocator cannot expand", "[memory]")
