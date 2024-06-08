@@ -39,3 +39,7 @@ tasks:
   coverage:
     cmds:
       - ninja -C {{.BUILD_DIR}} coverage
+
+  wipe:
+    cmds:
+      - rm -r {{.BUILD_DIR}}
