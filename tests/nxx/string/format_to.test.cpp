@@ -171,7 +171,6 @@ TEST_CASE("format_to - pointer", "[string]")
 
         CHECK(sv == "Format a pointer '12345678'");
     }
-    
 }
 
 TEST_CASE("format_to - binary presentation", "[string]")
@@ -195,6 +194,39 @@ TEST_CASE("format_to - binary presentation", "[string]")
 
         CHECK(sv == "Format to binary '101010'");
     }
+}
+
+TEST_CASE("format_to - character presentation", "[string]")
+{
+    output out;
+
+    format_to(out, "Format to character '{:c}'", 'v');
+
+    string_view sv = out.view();
+
+    CHECK(sv == "Format to character 'v'");
+}
+
+TEST_CASE("format_to - decimal presentation", "[string]")
+{
+    output out;
+
+    format_to(out, "Format to decimal '{:d}'", 42069);
+
+    string_view sv = out.view();
+
+    CHECK(sv == "Format to decimal '42069'");
+}
+
+TEST_CASE("format_to - octal presentation", "[string]")
+{
+    output out;
+
+    format_to(out, "Format to octal '{:o}'", 9);
+
+    string_view sv = out.view();
+
+    CHECK(sv == "Format to octal '11'");
 }
 
 TEST_CASE("format_to - hex presentation", "[string]")
@@ -242,4 +274,4 @@ TEST_CASE("format_to - finishing with {:PRESENTATION}", "[string]")
     CHECK(sv == "0xfefefefe");
 }
 
-} // namespace NOS
+} // namespace nxx
