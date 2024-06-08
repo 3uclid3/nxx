@@ -4,6 +4,7 @@
 #include <nxx/memory/alignment.hpp>
 #include <nxx/memory/allocator/allocator_reallocation.hpp>
 #include <nxx/memory/memory_block.hpp>
+#include <nxx/memory/utility.hpp>
 
 namespace nxx {
 
