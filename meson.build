@@ -43,9 +43,6 @@ if sanitizers.length() > 0
 endif
 
 macros = []
-if build_tests
-    macros += ['-DNXX_NO_DECLARE_NEW_OPERATOR']
-endif
 
 nxx = []
 nxx_dep = []

@@ -1,44 +1,61 @@
 #include <nxx/memory/new.hpp>
 
-#ifndef NXX_NO_DECLARE_NEW_OPERATOR
-
-#include <nxx/def.hpp>
 #include <nxx/memory/allocate.hpp>
 
-[[nodiscard]] void* operator new(nxx::size_t size)
+[[nodiscard]] void* operator new(nxx::size_t size) noexcept
 {
-    return nxx::allocate(size).pointer;
+    return nxx::allocate(size).ptr
 }
 
-[[nodiscard]] void* operator new[](nxx::size_t size)
+[[nodiscard]] void* operator new[](nxx::size_t size) noexcept
 {
-    return nxx::allocate(size).pointer;
+    return nxx::allocate(size).ptr;
+}
+
+[[nodiscard]] void* operator new(nxx::size_t size, void* ptr)
+{
+    NXX_UNUSED(size);
+    return ptr;
+}
+
+[[nodiscard]] void* operator new[](nxx::size_t size, void* ptr)
+{
+    NXX_UNUSED(size);
+    return ptr;
 }
 
 void operator delete(void* ptr) noexcept
 {
-    NXX_ASSERT(false, "delete called without providing size");
-    nxx::memory_block block{.pointer = ptr, .size = 0};
+    nxx::memory_block block{ptr, 0};
     nxx::deallocate(block);
 }
 
 void operator delete[](void* ptr) noexcept
 {
-    NXX_ASSERT(false, "delete called without providing size");
-    nxx::memory_block block{.pointer = ptr, .size = 0};
+    nxx::memory_block block{ptr, 0};
     nxx::deallocate(block);
 }
 
 void operator delete(void* ptr, nxx::size_t size) noexcept
 {
-    nxx::memory_block block{.pointer = ptr, .size = size};
+    nxx::memory_block block{ptr, size};
     nxx::deallocate(block);
 }
 
 void operator delete[](void* ptr, nxx::size_t size) noexcept
 {
-    nxx::memory_block block{.pointer = ptr, .size = size};
+    nxx::memory_block block{ptr, size};
     nxx::deallocate(block);
 }
 
-#endif
+void operator delete(void* ptr, void* place) noexcept
+{
+    NXX_UNUSED(ptr);
+    NXX_UNUSED(place);
+}
+
+void operator delete[](void* ptr, void* place) noexcept
+{
+    NXX_UNUSED(ptr);
+    NXX_UNUSED(place);
+}
