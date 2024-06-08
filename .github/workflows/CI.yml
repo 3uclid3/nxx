@@ -36,7 +36,7 @@ jobs:
           
       - name: Coverage reports
         run: |
-          task generate-coverage
+          task coverage
           
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
@@ -51,7 +51,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [llvm, gcc]
+        compiler: [llvm-18, gcc-13, gcc-14]
         
     steps:
       - name: Checkout
