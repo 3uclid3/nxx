@@ -4,7 +4,7 @@ version: '3'
 env:
   BUILD_TYPE: '{{.BUILD_TYPE | default "debug"}}'
   BUILD_DIR: 'build'
-  GCC_VERSION: '14'
+  GCC_VERSION: '13'
   LLVM_VERSION: '18'
 
 dotenv: [ '.env' ]
@@ -23,7 +23,7 @@ tasks:
   
   test:
     cmds:
-      - meson test -C {{.BUILD_DIR}}
+      - meson test -v -C {{.BUILD_DIR}}
 
   generate-coverage:
     cmds:
