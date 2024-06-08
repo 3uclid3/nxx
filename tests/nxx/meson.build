@@ -29,6 +29,7 @@ tests = files(
     'memory/allocator/allocator_traits.test.cpp',
     'memory/allocator/fallback_allocator.test.cpp',
     'memory/allocator/null_allocator.test.cpp',
+    'memory/allocator/prefixed_size_allocator.test.cpp',
     'memory/allocator/proxy_interface_allocator.test.cpp',
     'memory/allocator/slab_allocator.test.cpp',
     'memory/allocator/stack_allocator.test.cpp',
