@@ -16,6 +16,11 @@ jobs:
     runs-on: ubuntu-22.04
     container: 3uclid3/nos-buildenv:latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [llvm, gcc]
+
     permissions:
       security-events: write
 
@@ -30,11 +35,16 @@ jobs:
 
       - name: Setup
         run: |
-          task setup BUILD_TYPE=debug
+          task setup:${{ matrix.compiler }} BUILD_TYPE=debug
 
       - name: Compile
         run: |
           task compile
+      
+      # we run tests because most of the code is header only
+      - name: Test
+        run: |
+          task test 
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
