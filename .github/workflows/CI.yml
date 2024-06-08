@@ -8,15 +8,15 @@ on:
       - main
 
 jobs:
-  test-coverage:
-    name: Test Coverage
+  coverage:
+    name: Coverage
     runs-on: ubuntu-22.04
     container: 3uclid3/nos-buildenv:latest
 
     strategy:
       fail-fast: false
       matrix:
-        compiler: [llvm, gcc]
+        compiler: [llvm-18, gcc-13, gcc-14]
         
     steps:
       - name: Checkout
@@ -24,7 +24,7 @@ jobs:
           
       - name: Setup
         run: |
-            task setup:${{ matrix.compiler }} BUILD_TYPE=debug -- -Db_coverage=true;
+            task setup:${{ matrix.compiler }} BUILD_TYPE=debug -- -Db_coverage=true
 
       - name: Compile
         run: |
@@ -59,7 +59,7 @@ jobs:
           
       - name: Setup
         run: |
-            task setup:${{ matrix.compiler }} BUILD_TYPE=release -- -Db_coverage=true;
+            task setup:${{ matrix.compiler }} BUILD_TYPE=release
 
       - name: Compile
         run: |
