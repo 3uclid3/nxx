@@ -25,7 +25,7 @@ public:
     constexpr void deallocate_all();
 
 private:
-    constexpr bool is_last_allocated_block(const memory_block& block) const;
+    constexpr bool is_last_allocated_unaligned_block(const memory_block& block) const;
 
 private:
     alignas(AlignmentT) u8_t _data[SizeT];
@@ -47,7 +47,7 @@ constexpr memory_block stack_allocator<SizeT, AlignmentT>::allocate(size_t size)
         return nullblk;
     }
 
-    memory_block block{_ptr, aligned_size};
+    memory_block block{_ptr, size};
 
     _ptr += aligned_size;
 
@@ -68,9 +68,9 @@ constexpr void stack_allocator<SizeT, AlignmentT>::deallocate(memory_block& bloc
         return;
     }
 
-    if (is_last_allocated_block(block))
+    if (is_last_allocated_unaligned_block(block))
     {
-        _ptr = static_cast<u8_t*>(block.ptr);
+        _ptr = block.as<u8_t>();
     }
 
     block = nullblk;
@@ -84,14 +84,14 @@ constexpr bool stack_allocator<SizeT, AlignmentT>::reallocate(memory_block& bloc
         return block;
     }
 
-    const size_t aligned_size = round_to_alignment(new_size, AlignmentT);
+    const size_t aligned_new_size = round_to_alignment(new_size, AlignmentT);
 
-    if (is_last_allocated_block(block))
+    if (is_last_allocated_unaligned_block(block))
     {
-        if (static_cast<u8_t*>(block.ptr) + aligned_size <= _data + SizeT)
+        if (block.as<u8_t>() + aligned_new_size <= _data + SizeT)
         {
-            block.size = aligned_size;
-            _ptr = static_cast<u8_t*>(block.ptr) + aligned_size;
+            block.size = new_size;
+            _ptr = block.as<u8_t>() + aligned_new_size;
             return true;
         }
 
@@ -99,18 +99,20 @@ constexpr bool stack_allocator<SizeT, AlignmentT>::reallocate(memory_block& bloc
         return false;
     }
 
-    if (block.size > new_size)
+    const size_t aligned_size = round_to_alignment(block.size, AlignmentT);
+
+    if (aligned_size >= aligned_new_size)
     {
-        block.size = round_to_alignment(new_size, AlignmentT);
+        block.size = new_size;
         return true;
     }
 
-    memory_block new_block = allocate(new_size);
-
-    if (new_block)
+    if (memory_block new_block = allocate(aligned_new_size))
     {
         memcpy(new_block.ptr, block.ptr, block.size);
-        block = new_block;
+
+        block.ptr = new_block.ptr;
+        block.size = new_size;
         return true;
     }
 
@@ -131,7 +133,7 @@ constexpr bool stack_allocator<SizeT, AlignmentT>::expand(memory_block& block, s
         return block;
     }
 
-    if (!is_last_allocated_block(block))
+    if (!is_last_allocated_unaligned_block(block))
     {
         return false;
     }
@@ -144,7 +146,7 @@ constexpr bool stack_allocator<SizeT, AlignmentT>::expand(memory_block& block, s
     }
 
     _ptr += aligned_delta;
-    block.size += aligned_delta;
+    block.size += delta;
 
     return true;
 }
@@ -156,9 +158,9 @@ constexpr void stack_allocator<SizeT, AlignmentT>::deallocate_all()
 }
 
 template<size_t SizeT, size_t AlignmentT>
-constexpr bool stack_allocator<SizeT, AlignmentT>::is_last_allocated_block(const memory_block& block) const
+constexpr bool stack_allocator<SizeT, AlignmentT>::is_last_allocated_unaligned_block(const memory_block& block) const
 {
-    return _ptr == static_cast<const u8_t*>(block.ptr) + block.size;
+    return _ptr == static_cast<const u8_t*>(block.ptr) + round_to_alignment(block.size, AlignmentT);
 }
 
 } // namespace nxx
