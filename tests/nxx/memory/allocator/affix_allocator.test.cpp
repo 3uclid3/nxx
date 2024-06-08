@@ -1,5 +1,7 @@
 #include <catch2/catch_template_test_macros.hpp>
 
+#include <tuple>
+
 #include <nxx/def.hpp>
 #include <nxx/memory/allocator/affix_allocator.hpp>
 #include <nxx/memory/allocator/allocator.fixture.hpp>
@@ -34,11 +36,11 @@ using affix_allocator8 = affix_allocator<stack_allocator8_t, prefix, suffix>;
 using affix_allocator16 = affix_allocator<stack_allocator16_t, prefix, suffix>;
 
 using affix_allocator_types = std::tuple<
-    //prefix_allocator,
-    //suffix_allocator,
-//
-    //affix_allocator4,
-    //affix_allocator8,
+    prefix_allocator,
+    suffix_allocator,
+
+    affix_allocator4,
+    affix_allocator8,
     affix_allocator16
 >;
 

@@ -2,8 +2,8 @@
 
 #include <nxx/def.hpp>
 #include <nxx/memory/alignment.hpp>
-#include <nxx/memory/allocator/allocator_traits.hpp>
 #include <nxx/memory/allocator/allocator_reallocation.hpp>
+#include <nxx/memory/allocator/allocator_traits.hpp>
 #include <nxx/memory/construct_at.hpp>
 #include <nxx/memory/memory_block.hpp>
 #include <nxx/memory/voidify.hpp>
