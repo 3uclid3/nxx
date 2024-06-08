@@ -8,15 +8,25 @@ env:
 dotenv: [ '.env' ]
 
 tasks:
+  setup:internal:
+    internal: true
+    cmds:
+      - meson setup {{.BUILD_DIR}} --buildtype {{.BUILD_TYPE}} --native-file native_file/{{OS}}-{{.COMPILER}}.native_file {{.CLI_ARGS}} 
   setup:gcc-13:
     cmds:
-      - meson setup {{.BUILD_DIR}} --buildtype {{.BUILD_TYPE}} --native-file native_file/{{OS}}-gcc-13.native_file {{.CLI_ARGS}} 
+      - task: setup:internal
+        vars:
+          COMPILER: gcc-13
   setup:gcc-14:
     cmds:
-      - meson setup {{.BUILD_DIR}} --buildtype {{.BUILD_TYPE}} --native-file native_file/{{OS}}-gcc-14.native_file {{.CLI_ARGS}} 
-  setup:llvm-18:
+      - task: setup:internal
+        vars:
+          COMPILER: gcc-13
+  setup:clang-18:
     cmds:
-      - meson setup {{.BUILD_DIR}} --buildtype {{.BUILD_TYPE}} --native-file native_file/{{OS}}-llvm-18.native_file {{.CLI_ARGS}}
+      - task: setup:internal
+        vars:
+          COMPILER: clang-18
 
   compile:
     cmds:
@@ -29,4 +39,3 @@ tasks:
   coverage:
     cmds:
       - ninja -C {{.BUILD_DIR}} coverage
-

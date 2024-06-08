@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [llvm-18, gcc-13, gcc-14]
+        compiler: [clang-18, gcc-13]
 
     permissions:
       security-events: write

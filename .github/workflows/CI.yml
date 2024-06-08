@@ -8,15 +8,15 @@ on:
       - main
 
 jobs:
-  coverage:
-    name: Coverage
+  test-debug-coverage:
+    name: Test Debug and Coverage
     runs-on: ubuntu-22.04
     container: 3uclid3/nos-buildenv:latest
 
     strategy:
       fail-fast: false
       matrix:
-        compiler: [llvm-18, gcc-13, gcc-14]
+        compiler: [clang-18, gcc-13]
         
     steps:
       - name: Checkout
@@ -51,7 +51,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [llvm-18, gcc-13, gcc-14]
+        compiler: [clang-18, gcc-13]
         
     steps:
       - name: Checkout
