@@ -1,6 +1,7 @@
 #include <nxx/memory/allocate.hpp>
 
 #include <malloc.h>
+#include <new>
 
 #include <nxx/memory/allocator/affix/memory_corruption_detector.hpp>
 #include <nxx/memory/allocator/affix_allocator.hpp>
