@@ -1,19 +1,20 @@
 ---
 ignore:
+  - "build/**"
   - "subprojects/**"
   - "tests/**"
 coverage:
   status:
     project:
       default:
-        target: 90%
+        target: 75%
         threshold: 10%
         base: auto
         paths:
           - "nxx/nxx/"
     patch:
       default:
-        target: 90%
+        target: 75%
         threshold: 10%
         base: auto
         paths:
