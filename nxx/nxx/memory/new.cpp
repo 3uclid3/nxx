@@ -2,23 +2,23 @@
 
 #include <nxx/memory/allocate.hpp>
 
-[[nodiscard]] void* operator new(nxx::size_t size) noexcept
-{
-    return nxx::allocate(size).ptr
-}
-
-[[nodiscard]] void* operator new[](nxx::size_t size) noexcept
+[[nodiscard]] void* operator new(nxx::size_t size)
 {
     return nxx::allocate(size).ptr;
 }
 
-[[nodiscard]] void* operator new(nxx::size_t size, void* ptr)
+[[nodiscard]] void* operator new[](nxx::size_t size)
+{
+    return nxx::allocate(size).ptr;
+}
+
+[[nodiscard]] void* operator new(nxx::size_t size, void* ptr) noexcept
 {
     NXX_UNUSED(size);
     return ptr;
 }
 
-[[nodiscard]] void* operator new[](nxx::size_t size, void* ptr)
+[[nodiscard]] void* operator new[](nxx::size_t size, void* ptr) noexcept
 {
     NXX_UNUSED(size);
     return ptr;
