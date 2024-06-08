@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("decay", "[type-trait]")
+TEST_CASE("decay", "[type_trait]")
 {
     STATIC_CHECK(is_same<decay<const volatile u8_t&>, u8_t>);
     STATIC_CHECK(is_same<decay<const u8_t&>, u8_t>);

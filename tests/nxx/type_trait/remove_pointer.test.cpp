@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("remove_pointer", "[type-trait]")
+TEST_CASE("remove_pointer", "[type_trait]")
 {
     STATIC_CHECK(is_same<remove_pointer<s8_t*>, s8_t>);
     STATIC_CHECK(is_same<remove_pointer<const u8_t*>, const u8_t>);

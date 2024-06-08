@@ -12,9 +12,15 @@ static source_location function()
 TEST_CASE("source_location")
 {
     CHECK(function().line() == 9);
-    CHECK(function().column() == 12);
     CHECK(function().file_name() == "../tests/nxx/utility/source_location.test.cpp");
+    
+#if defined(__clang__)
+    CHECK(function().column() == 12);
     CHECK(function().function_name() == "source_location nxx::function()");
+#elif defined(__GNUC__)
+    CHECK(function().column() == 36);
+    CHECK(function().function_name() == "nxx::source_location nxx::function()");
+#endif
 }
 
 } // namespace nxx

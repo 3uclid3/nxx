@@ -28,7 +28,7 @@ jobs:
         with:
           languages: cpp
 
-      - name: Setup build
+      - name: Setup
         run: |
           task setup BUILD_TYPE=debug
 

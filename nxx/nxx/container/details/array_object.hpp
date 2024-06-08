@@ -4,10 +4,8 @@
 #include <nxx/memory/allocate.hpp>
 #include <nxx/memory/construct_at.hpp>
 #include <nxx/memory/memory_block.hpp>
-#include <nxx/type_trait/is_copy_assignable.hpp>
-#include <nxx/type_trait/is_copy_constructible.hpp>
-#include <nxx/type_trait/is_move_assignable.hpp>
-#include <nxx/type_trait/is_move_constructible.hpp>
+#include <nxx/type_trait/is_assignable.hpp>
+#include <nxx/type_trait/is_constructible.hpp>
 #include <nxx/utility/forward.hpp>
 #include <nxx/utility/move.hpp>
 #include <nxx/utility/swap.hpp>
@@ -72,6 +70,7 @@ public:
 
     constexpr void reserve(size_t size);
     constexpr void resize(size_t size);
+    constexpr void resize(size_t size, const_reference value);
     constexpr void clear();
     constexpr void free();
 
@@ -277,6 +276,19 @@ constexpr void array_object<T, SizeT>::resize(size_t new_size)
     }
 
     super::_size = static_cast<data_size_type>(new_size);
+}
+
+template<typename T, typename SizeT>
+constexpr void array_object<T, SizeT>::resize(size_t size, const_reference value)
+{
+    const size_t previous_size = super::_size;
+
+    resize(size);
+
+    for (size_t i = previous_size; i < size; ++i)
+    {
+        (*this)[i] = value;
+    }
 }
 
 template<typename T, typename SizeT>

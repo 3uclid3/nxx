@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("conditional", "[type-trait]")
+TEST_CASE("conditional", "[type_trait]")
 {
     STATIC_CHECK(is_same<conditional<true, u8_t, s8_t>, u8_t>);
     STATIC_CHECK(is_same<conditional<false, u8_t, s8_t>, s8_t>);

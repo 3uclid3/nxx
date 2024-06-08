@@ -1,9 +1,7 @@
 #pragma once
 
-#include <nxx/type_trait/is_copy_assignable.hpp>
-#include <nxx/type_trait/is_copy_constructible.hpp>
-#include <nxx/type_trait/is_move_assignable.hpp>
-#include <nxx/type_trait/is_move_constructible.hpp>
+#include <nxx/type_trait/is_assignable.hpp>
+#include <nxx/type_trait/is_constructible.hpp>
 #include <nxx/utility/move.hpp>
 
 namespace nxx {

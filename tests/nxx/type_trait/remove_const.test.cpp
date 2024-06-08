@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("remove_const", "[type-trait]")
+TEST_CASE("remove_const", "[type_trait]")
 {
     STATIC_CHECK(is_same<remove_const<const s8_t>, s8_t>);
     STATIC_CHECK(is_same<remove_const<const u8_t>, u8_t>);

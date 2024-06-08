@@ -1,7 +1,6 @@
 project(
     'nxx', ['cpp'],
-    version : 'v0.1',
-    license: 'GPL-3.0',
+    version : '0.1.0',
     default_options : [
         'cpp_std=c++23',
         'default_library=static',
@@ -14,21 +13,16 @@ project(
 
 opt_asan = get_option('asan')
 opt_ubsan = get_option('ubsan')
-opt_build_tests = get_option('build_tests')
+tests = get_option('tests')
 
 asan = opt_asan.enabled() 
 if opt_asan.auto()
-	asan = not meson.is_subproject()
+	asan = tests
 endif
 
 ubsan = opt_ubsan.enabled()
 if opt_ubsan.auto()
-	ubsan = not meson.is_subproject()
-endif
-
-build_tests = opt_build_tests.enabled()
-if opt_build_tests.auto()
-	build_tests = not meson.is_subproject()
+	ubsan = tests
 endif
 
 sanitizers = []
@@ -42,13 +36,11 @@ if sanitizers.length() > 0
     sanitizers = '-fsanitize=' + ','.join(sanitizers)
 endif
 
-macros = []
-
 nxx = []
 nxx_dep = []
 
 subdir('nxx')
 
-if build_tests
+if tests
     subdir('tests')
 endif

@@ -5,7 +5,7 @@
 
 namespace nxx {
 
-TEST_CASE("is_arithmetic", "[type-trait]")
+TEST_CASE("is_arithmetic", "[type_trait]")
 {
     STATIC_CHECK(is_arithmetic<u8_t>);
     STATIC_CHECK(is_arithmetic<s8_t>);

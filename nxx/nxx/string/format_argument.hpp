@@ -84,7 +84,7 @@ private:
 
         s8_t s8;
         s16_t s16;
-        s32_t s32_t;
+        s32_t s32;
         s64_t s64;
 
         u8_t u8;
@@ -141,7 +141,7 @@ constexpr format_argument::format_argument(s16_t v)
 constexpr format_argument::format_argument(s32_t v)
     : _type(type::sint32)
 {
-    _data.s32_t = v;
+    _data.s32 = v;
 }
 
 constexpr format_argument::format_argument(s64_t v)
@@ -220,7 +220,7 @@ constexpr s16_t format_argument::as_s16() const
 
 constexpr s32_t format_argument::as_s32() const
 {
-    return _data.s32_t;
+    return _data.s32;
 }
 
 constexpr s64_t format_argument::as_s64() const

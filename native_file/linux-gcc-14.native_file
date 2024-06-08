@@ -1,0 +1,5 @@
+[binaries]
+c = 'gcc-14'
+cpp = 'g++-14'
+gcov = 'gcov-14'
+

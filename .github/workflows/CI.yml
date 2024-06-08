@@ -6,28 +6,25 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
-  test-and-code-coverage:
-    name: Test and Code Coverage
+  test-coverage:
+    name: Test Coverage
     runs-on: ubuntu-22.04
     container: 3uclid3/nos-buildenv:latest
 
     strategy:
       fail-fast: false
       matrix:
-        build-type: [debug, release]
+        compiler: [llvm, gcc]
         
     steps:
       - name: Checkout
         uses: actions/checkout@v4
           
-      - name: Setup build
+      - name: Setup
         run: |
-          if [ "${{ matrix.build-type }}" = "debug" ]; then
-            task setup BUILD_TYPE=${{ matrix.build-type }} -- -Db_coverage=true;
-          else
-            task setup BUILD_TYPE=${{ matrix.build-type }};
-          fi
+            task setup:${{ matrix.compiler }} BUILD_TYPE=debug -- -Db_coverage=true;
 
       - name: Compile
         run: |
@@ -37,13 +34,37 @@ jobs:
         run: |
           task test
           
-      - name: Coverage report
-        if: matrix.build-type == 'debug'
+      - name: Coverage reports
         run: |
           task generate-coverage
           
       - name: Upload coverage reports to Codecov
-        if: matrix.build-type == 'debug'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+  
+  test-release:
+    name: Test Release
+    runs-on: ubuntu-22.04
+    container: 3uclid3/nos-buildenv:latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [llvm, gcc]
+        
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+          
+      - name: Setup
+        run: |
+            task setup:${{ matrix.compiler }} BUILD_TYPE=release -- -Db_coverage=true;
+
+      - name: Compile
+        run: |
+          task compile
+
+      - name: Test
+        run: |
+          task test

@@ -5,7 +5,7 @@
 
 namespace nxx {
 
-TEST_CASE("bits_of", "[type-trait]")
+TEST_CASE("bits_of", "[type_trait]")
 {
     STATIC_CHECK(bits_of<s8_t> == 8);
     STATIC_CHECK(bits_of<u8_t> == 8);

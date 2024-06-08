@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("remove_reference", "[type-trait]")
+TEST_CASE("remove_reference", "[type_trait]")
 {
     static_assert(is_same<remove_reference<s32_t>, s32_t>);
     static_assert(is_same<remove_reference<s32_t&>, s32_t>);

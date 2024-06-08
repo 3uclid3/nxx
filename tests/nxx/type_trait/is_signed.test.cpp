@@ -5,7 +5,7 @@
 
 namespace nxx {
 
-TEST_CASE("is_signed", "[type-trait]")
+TEST_CASE("is_signed", "[type_trait]")
 {
     STATIC_CHECK(is_signed<f32_t>);
     STATIC_CHECK(is_signed<f64_t>);

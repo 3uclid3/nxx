@@ -4,7 +4,7 @@ sources += files(
     'string/format.cpp'
 )
 
-if not build_tests
+if not tests
     sources += files(
         'memory/new.cpp',
     )

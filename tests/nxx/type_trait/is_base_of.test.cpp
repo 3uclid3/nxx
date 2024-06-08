@@ -11,7 +11,7 @@ struct GreenApple : Apple { };
 struct RedApple : Apple { };
 struct Orange : Fruit { };
 
-TEST_CASE("is_base_of", "[type-trait]")
+TEST_CASE("is_base_of", "[type_trait]")
 {
     STATIC_CHECK(is_base_of<Fruit, Apple>);
     STATIC_CHECK(is_base_of<Fruit, GreenApple>);

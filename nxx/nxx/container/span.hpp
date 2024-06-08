@@ -3,7 +3,7 @@
 #include <nxx/container/static_array.hpp>
 #include <nxx/def.hpp>
 #include <nxx/memory/pointer_traits.hpp>
-#include <nxx/type_trait/remove_const_volatile.hpp>
+#include <nxx/type_trait/remove_cv.hpp>
 
 namespace nxx {
 
@@ -17,7 +17,7 @@ class span
 {
 public:
     using element_type = T;
-    using value_type = remove_const_volatile<T>;
+    using value_type = remove_cv<T>;
 
     using size_type = size_t;
     using difference_type = ptrdiff_t;
@@ -68,7 +68,7 @@ class span<T, dynamic_extent>
 {
 public:
     using element_type = T;
-    using value_type = remove_const_volatile<T>;
+    using value_type = remove_cv<T>;
 
     using size_type = size_t;
     using difference_type = ptrdiff_t;

@@ -1,10 +1,24 @@
 #pragma once
 
-#include <nxx/type_trait/details/conditional_impl.hpp>
+namespace nxx::impl {
+
+template<bool ConditionT, typename TrueT, typename FalseT>
+struct conditional
+{
+    using type = TrueT;
+};
+
+template<typename TrueT, typename FalseT>
+struct conditional<false, TrueT, FalseT>
+{
+    using type = FalseT;
+};
+
+} // namespace nxx::impl
 
 namespace nxx {
 
 template<bool ConditionT, typename TrueT, typename FalseT>
-using conditional = details::conditional_impl<ConditionT, TrueT, FalseT>::type;
+using conditional = impl::conditional<ConditionT, TrueT, FalseT>::type;
 
 } // namespace nxx

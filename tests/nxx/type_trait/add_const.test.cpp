@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("add_const", "[type-trait]")
+TEST_CASE("add_const", "[type_trait]")
 {
     STATIC_CHECK(is_same<add_const<s8_t>, const s8_t>);
     STATIC_CHECK(is_same<add_const<u8_t>, const u8_t>);

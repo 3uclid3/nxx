@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("add_lvalue_reference", "[type-trait]")
+TEST_CASE("add_lvalue_reference", "[type_trait]")
 {
     static_assert(is_same<add_lvalue_reference<s32_t>, s32_t&>);
     static_assert(is_same<add_lvalue_reference<s32_t&>, s32_t&>);

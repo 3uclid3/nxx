@@ -5,7 +5,7 @@
 
 namespace nxx {
 
-TEST_CASE("is_signed_integer", "[type-trait]")
+TEST_CASE("is_signed_integer", "[type_trait]")
 {
     STATIC_CHECK(is_signed_integer<s8_t>);
     STATIC_CHECK(is_signed_integer<s16_t>);

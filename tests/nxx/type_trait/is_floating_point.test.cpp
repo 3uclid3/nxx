@@ -5,7 +5,7 @@
 
 namespace nxx {
 
-TEST_CASE("is_floating_point", "[type-trait]")
+TEST_CASE("is_floating_point", "[type_trait]")
 {
     STATIC_CHECK_FALSE(is_floating_point<u8_t>);
     STATIC_CHECK_FALSE(is_floating_point<s8_t>);

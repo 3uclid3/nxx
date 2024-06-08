@@ -9,9 +9,7 @@ nxx_test = executable(
     'nxx.test',
     tests,
     install : false,
-    dependencies : [catch2_dep, nxx_dep],
-    c_args : [macros],
-    cpp_args : [macros]
+    dependencies : [catch2_dep, nxx_dep]
 )
 
 test('nxx', nxx_test)

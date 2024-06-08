@@ -6,6 +6,6 @@
 namespace nxx {
 
 template<typename T>
-using add_const_volatile = add_const<add_volatile<T>>;
+using add_cv = add_const<add_volatile<T>>;
 
 } // namespace nxx

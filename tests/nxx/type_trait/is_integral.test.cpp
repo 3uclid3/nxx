@@ -5,7 +5,7 @@
 
 namespace nxx {
 
-TEST_CASE("is_integral", "[type-trait]")
+TEST_CASE("is_integral", "[type_trait]")
 {
     STATIC_CHECK(is_integral<u8_t>);
     STATIC_CHECK(is_integral<s8_t>);

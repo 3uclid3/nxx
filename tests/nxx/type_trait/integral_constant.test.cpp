@@ -20,7 +20,7 @@ void check()
     STATIC_CHECK(ic() == ValueT);
 }
 
-TEST_CASE("integral_constant", "[type-trait]")
+TEST_CASE("integral_constant", "[type_trait]")
 {
     check<u8_t, 0>();
     check<u8_t, 128>();

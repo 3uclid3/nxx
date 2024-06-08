@@ -2,7 +2,7 @@
 
 #include <nxx/def.hpp>
 #include <nxx/type_trait/is_const.hpp>
-#include <nxx/type_trait/remove_const_volatile.hpp>
+#include <nxx/type_trait/remove_cv.hpp>
 #include <nxx/utility/integer_sequence.hpp>
 #include <nxx/utility/move.hpp>
 
@@ -12,10 +12,10 @@ template<typename T, size_t SizeT>
 class static_array;
 
 template<typename T, size_t SizeT>
-constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&array)[SizeT]);
+constexpr static_array<remove_cv<T>, SizeT> to_static_array(T (&array)[SizeT]);
 
 template<typename T, size_t SizeT>
-constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&&array)[SizeT]);
+constexpr static_array<remove_cv<T>, SizeT> to_static_array(T (&&array)[SizeT]);
 
 template<typename T, size_t SizeT>
 class static_array
@@ -127,13 +127,13 @@ public:
 namespace details {
 
 template<typename T, size_t SizeT, size_t... IndexT>
-constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array_lvalue(T (&array)[SizeT], index_sequence<IndexT...>)
+constexpr static_array<remove_cv<T>, SizeT> to_static_array_lvalue(T (&array)[SizeT], index_sequence<IndexT...>)
 {
     return {{array[IndexT]...}};
 }
 
 template<typename T, size_t SizeT, size_t... IndexT>
-constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array_rvalue(T (&&array)[SizeT], index_sequence<IndexT...>)
+constexpr static_array<remove_cv<T>, SizeT> to_static_array_rvalue(T (&&array)[SizeT], index_sequence<IndexT...>)
 {
     return {{move(array[IndexT])...}};
 }
@@ -141,13 +141,13 @@ constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array_rvalue(T
 } // namespace details
 
 template<typename T, size_t SizeT>
-constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&array)[SizeT])
+constexpr static_array<remove_cv<T>, SizeT> to_static_array(T (&array)[SizeT])
 {
     return details::to_static_array_lvalue(array, make_index_sequence<SizeT>());
 }
 
 template<typename T, size_t SizeT>
-constexpr static_array<remove_const_volatile<T>, SizeT> to_static_array(T (&&array)[SizeT])
+constexpr static_array<remove_cv<T>, SizeT> to_static_array(T (&&array)[SizeT])
 {
     return details::to_static_array_rvalue(move(array), make_index_sequence<SizeT>());
 }

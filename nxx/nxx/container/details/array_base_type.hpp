@@ -3,9 +3,8 @@
 #include <nxx/container/details/array_object.hpp>
 #include <nxx/container/details/array_trivial.hpp>
 #include <nxx/type_trait/conditional.hpp>
-#include <nxx/type_trait/is_trivially_copy_constructible.hpp>
+#include <nxx/type_trait/is_trivially_constructible.hpp>
 #include <nxx/type_trait/is_trivially_destructible.hpp>
-#include <nxx/type_trait/is_trivially_move_constructible.hpp>
 
 namespace nxx::details {
 

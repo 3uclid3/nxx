@@ -4,7 +4,7 @@
 
 namespace nxx {
 
-TEST_CASE("is_const", "[type-trait]")
+TEST_CASE("is_const", "[type_trait]")
 {
     STATIC_CHECK(is_const<const char>);
 

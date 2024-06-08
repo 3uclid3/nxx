@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("remove_volatile", "[type-trait]")
+TEST_CASE("remove_volatile", "[type_trait]")
 {
     STATIC_CHECK(is_same<remove_volatile<volatile s8_t>, s8_t>);
     STATIC_CHECK(is_same<remove_volatile<volatile u8_t>, u8_t>);

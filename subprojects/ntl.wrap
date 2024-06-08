@@ -1,7 +1,0 @@
-[wrap-git]
-url = https://github.com/3uclid3/ntl
-revision = main
-depth = 1
-
-[provide]
-ntl = ntl_dep

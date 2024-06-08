@@ -6,7 +6,7 @@
 
 namespace nxx {
 
-TEST_CASE("add_pointer", "[type-trait]")
+TEST_CASE("add_pointer", "[type_trait]")
 {
     STATIC_CHECK(is_same<add_pointer<s8_t>, s8_t*>);
     STATIC_CHECK(is_same<add_pointer<const u8_t>, const u8_t*>);

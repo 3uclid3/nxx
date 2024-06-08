@@ -1,10 +1,18 @@
 #pragma once
 
-#include <nxx/type_trait/details/add_volatile_impl.hpp>
+namespace nxx::impl {
+
+template<typename T>
+struct add_volatile
+{
+    using type = volatile T;
+};
+
+} // namespace nxx::impl
 
 namespace nxx {
 
 template<typename T>
-using add_volatile = details::add_volatile_impl<T>::type;
+using add_volatile = impl::add_volatile<T>::type;
 
 } // namespace nxx

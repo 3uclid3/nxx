@@ -24,7 +24,7 @@ enum enum_b
     enum_b_v
 };
 
-TEST_CASE("is_enum_class", "[type-trait]")
+TEST_CASE("is_enum_class", "[type_trait]")
 {
     STATIC_CHECK(is_enum_class<enum_class_a>);
     STATIC_CHECK(is_enum_class<enum_class_b>);

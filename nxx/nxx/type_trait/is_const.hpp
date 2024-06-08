@@ -1,10 +1,23 @@
 #pragma once
 
-#include <nxx/type_trait/details/is_const_impl.hpp>
+#include <nxx/def.hpp>
+#include <nxx/type_trait/integral_constant.hpp>
+
+namespace nxx::impl {
+
+template<typename T>
+struct is_const : false_type
+{};
+
+template<typename T>
+struct is_const<const T> : true_type
+{};
+
+} // namespace nxx::impl
 
 namespace nxx {
 
 template<typename T>
-inline constexpr bool is_const = details::is_const_impl<T>::value;
+inline constexpr bool is_const = impl::is_const<T>::value;
 
 } // namespace nxx

@@ -1,15 +1,13 @@
 #pragma once
 
+#include <nxx/type_trait/copy_cv.hpp>
 #include <nxx/type_trait/is_enum.hpp>
 #include <nxx/type_trait/is_integral.hpp>
-#include <nxx/type_trait/copy_const_volatile.hpp>
-#include <nxx/type_trait/remove_const_volatile.hpp>
+#include <nxx/type_trait/remove_cv.hpp>
 
-namespace nxx {
+namespace nxx::impl {
 
-namespace details {
-
-template<typename T, bool = is_integral<T> || is_enum<T>>
+template<typename T, bool = is_integral<T>::value || is_enum<T>::value>
 struct make_signed_impl
 {};
 
@@ -25,9 +23,17 @@ template <> struct make_signed_impl<s64_t, true> { using type = s64_t; };
 template <> struct make_signed_impl<u64_t, true> { using type = s64_t; };
 // clang-format on
 
-} // namespace details
+template<typename T>
+struct make_signed
+{
+    using type = typename copy_cv<T>::template type<typename make_signed_impl<remove_cv<T>::type>::type>;
+};
+
+} // namespace nxx::impl
+
+namespace nxx {
 
 template<class T>
-using make_signed = copy_const_volatile<T, typename details::make_signed_impl<remove_const_volatile<T>>::type>;
+using make_signed = typename impl::make_signed<T>::type;
 
 } // namespace nxx

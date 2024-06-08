@@ -5,7 +5,7 @@
 
 namespace nxx {
 
-TEST_CASE("is_static_array", "[type-trait]")
+TEST_CASE("is_static_array", "[type_trait]")
 {
     STATIC_CHECK(is_static_array<static_array<s8_t, 0>>);
     STATIC_CHECK(is_static_array<static_array<s16_t, 1>>);

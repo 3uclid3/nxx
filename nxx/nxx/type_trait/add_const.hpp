@@ -1,10 +1,18 @@
 #pragma once
 
-#include <nxx/type_trait/details/add_const_impl.hpp>
+namespace nxx::impl {
+
+template<class T>
+struct add_const
+{
+    using type = const T;
+};
+
+} // namespace nxx::impl
 
 namespace nxx {
 
 template<typename T>
-using add_const = details::add_const_impl<T>::type;
+using add_const = impl::add_const<T>::type;
 
 } // namespace nxx
