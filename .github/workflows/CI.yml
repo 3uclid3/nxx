@@ -36,7 +36,7 @@ jobs:
           
       - name: Coverage reports
         run: |
-          task coverage
+          task coverage:generate
           
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4

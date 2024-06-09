@@ -27,6 +27,9 @@ tasks:
       - task: setup:internal
         vars:
           COMPILER: clang-18
+  setup:wipe:
+    cmds:
+      - rm -r {{.BUILD_DIR}}
 
   compile:
     cmds:
@@ -36,10 +39,15 @@ tasks:
     cmds:
       - meson test -v -C {{.BUILD_DIR}}
 
-  coverage:
+  coverage:generate:
     cmds:
       - ninja -C {{.BUILD_DIR}} coverage
 
-  wipe:
+  coverage:enable:
     cmds:
-      - rm -r {{.BUILD_DIR}}
+      - meson configure {{.BUILD_DIR}} -Db_coverage=true
+
+  coverage:disable:
+    cmds:
+      - meson configure {{.BUILD_DIR}} -Db_coverage=false
+

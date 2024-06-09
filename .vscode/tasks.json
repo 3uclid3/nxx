@@ -6,8 +6,7 @@
             "type": "shell",
             "command": "task setup:clang-18",
             "group": {
-                "kind": "build",
-                "isDefault": true
+                "kind": "build"
             }
         },
         {
@@ -15,8 +14,7 @@
             "type": "shell",
             "command": "task setup:gcc-13",
             "group": {
-                "kind": "build",
-                "isDefault": true
+                "kind": "build"
             }
         },
         {
@@ -24,11 +22,9 @@
             "type": "shell",
             "command": "task setup:gcc-14",
             "group": {
-                "kind": "build",
-                "isDefault": true
+                "kind": "build"
             }
         },
-        
         {
             "label": "compile",
             "type": "shell",
@@ -38,7 +34,6 @@
                 "isDefault": true
             }
         },
-        
         {
             "label": "test",
             "type": "shell",
@@ -48,18 +43,13 @@
                 "isDefault": true
             }
         },
-        
         {
             "label": "coverage",
             "type": "shell",
             "command": "task coverage",
             "dependsOn": [
                 "test"
-            ],
-            "group": {
-                "kind": "none",
-                "isDefault": true
-            }
+            ]
         }
     ]
 }

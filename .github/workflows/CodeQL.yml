@@ -40,11 +40,6 @@ jobs:
       - name: Compile
         run: |
           task compile
-      
-      # we run tests because most of the code is header only
-      - name: Test
-        run: |
-          task test 
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
