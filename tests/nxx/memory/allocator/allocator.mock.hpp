@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nxx/def.hpp>
+#include <nxx/memory/alignment.hpp>
 #include <nxx/memory/memory_block.hpp>
 
 namespace nxx::mock {
@@ -8,6 +9,8 @@ namespace nxx::mock {
 template<typename TagT>
 struct basic_minimal_allocator
 {
+    static constexpr size_t alignment = default_alignment;
+
     [[nodiscard]] memory_block allocate(size_t size)
     {
         NXX_UNUSED(size);

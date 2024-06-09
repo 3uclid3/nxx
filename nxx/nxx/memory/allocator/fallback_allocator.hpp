@@ -1,5 +1,6 @@
 #pragma once
 
+#include <nxx/memory/allocator/allocator_reallocation.hpp>
 #include <nxx/memory/allocator/allocator_traits.hpp>
 #include <nxx/memory/memory_block.hpp>
 
@@ -80,23 +81,28 @@ constexpr bool fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::expand
 template<typename PrimaryAllocatorT, typename FallbackAllocatorT>
 constexpr bool fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::reallocate(memory_block& block, size_t new_size)
 {
-    if (primary::owns(block))
+    const bool is_primary_owner = primary::owns(block);
+
+    if (is_primary_owner)
+    {
+        if (try_default_reallocate<primary>(*this, block, new_size))
+        {
+            return block;
+        }
+    }
+    else if (try_default_reallocate<fallback>(*this, block, new_size))
+    {
+        return block;
+    }
+
+    if (is_primary_owner)
     {
         if (primary::reallocate(block, new_size))
         {
             return true;
         }
 
-        if (memory_block new_block = fallback::allocate(new_size))
-        {
-            memcpy(new_block.ptr, block.ptr, block.size);
-            primary::deallocate(block);
-            block = new_block;
-
-            return true;
-        }
-
-        return false;
+        return reallocate_with_new_allocator<primary, fallback>(*this, *this, block, new_size);
     }
 
     return fallback::reallocate(block, new_size);
