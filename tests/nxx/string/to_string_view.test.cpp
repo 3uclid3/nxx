@@ -219,4 +219,4 @@ TEST_CASE("to_string_view", "[string]")
     }
 }
 
-} // namespace NOS
+} // namespace nxx

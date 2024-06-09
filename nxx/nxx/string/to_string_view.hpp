@@ -53,4 +53,4 @@ const string_view to_string_view(integral auto value, span<char> buffer, int bas
     return {buffer.cbegin(), size};
 }
 
-} // namespace NOS
+} // 

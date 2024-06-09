@@ -31,4 +31,4 @@ TEST_CASE("unique_ptr::release will release ownership of the object", "[memory]"
     delete val;
 }
 
-} // namespace NOS
+} // namespace nxx

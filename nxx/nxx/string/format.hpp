@@ -1,7 +1,7 @@
 #pragma once
 
-#include <nxx/def.hpp>
 #include <nxx/container/span.hpp>
+#include <nxx/def.hpp>
 #include <nxx/string/format_argument.hpp>
 #include <nxx/string/string_view.hpp>
 
@@ -18,4 +18,4 @@ string_view format(string_view fmt, const ArgsT&... raw_args)
     return vformat(fmt, args);
 }
 
-} // namespace NOS
+} // namespace nxx

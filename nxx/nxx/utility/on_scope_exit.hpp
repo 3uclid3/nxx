@@ -62,4 +62,4 @@ constexpr void on_scope_exit<OnExitFunctorT>::release()
     _released = true;
 }
 
-} // namespace NOS
+} // namespace nxx
