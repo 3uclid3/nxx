@@ -47,6 +47,9 @@
             "label": "coverage",
             "type": "shell",
             "command": "task coverage",
+            "group": {
+                "kind": "test"
+            },
             "dependsOn": [
                 "test"
             ]
