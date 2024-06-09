@@ -16,6 +16,8 @@ public:
     static constexpr size_t alignment = primary::alignment > fallback::alignment ? primary::alignment : fallback::alignment;
 
 public:
+    [[nodiscard]] constexpr size_t get_alignment() const;
+
     [[nodiscard]] constexpr memory_block allocate(size_t size);
 
     template<typename U = PrimaryAllocatorT, typename V = FallbackAllocatorT>
@@ -32,6 +34,12 @@ public:
     requires(allocator_traits::has_deallocate_all<U> && allocator_traits::has_deallocate_all<V>)
     constexpr void deallocate_all();
 };
+
+template<typename PrimaryAllocatorT, typename FallbackAllocatorT>
+constexpr size_t fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::get_alignment() const
+{
+    return alignment;
+}
 
 template<typename PrimaryAllocatorT, typename FallbackAllocatorT>
 constexpr memory_block fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::allocate(size_t size)

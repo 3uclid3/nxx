@@ -1,11 +1,23 @@
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include <nxx/memory/allocator/allocator.fixture.hpp>
 #include <nxx/memory/allocator/allocator.mock.hpp>
 #include <nxx/memory/allocator/fallback_allocator.hpp>
+#include <nxx/memory/allocator/stack_allocator.hpp>
 #include <nxx/memory/memory_block.hpp>
 
 namespace nxx {
+
+using fallback_basic_allocators = std::tuple<
+    fallback_allocator<stack_allocator<0x100, 4>, stack_allocator<0x1000, 4>>,
+    fallback_allocator<stack_allocator<0x100, 8>, stack_allocator<0x1000, 8>>,
+    fallback_allocator<stack_allocator<0x100, 16>, stack_allocator<0x1000, 16>>>;
+
+TEMPLATE_LIST_TEST_CASE_METHOD(basic_allocator_fixture, "fallback_allocator basics", "[memory]", fallback_basic_allocators)
+{
+    this->test_basics();
+}
 
 struct primary_tag
 {};

@@ -35,6 +35,8 @@ public:
     static constexpr bool has_suffix = suffix_size > 0;
 
 public:
+    [[nodiscard]] constexpr size_t get_alignment() const;
+
     [[nodiscard]] constexpr memory_block allocate(size_t size);
 
     template<typename U = AllocatorT>
@@ -120,6 +122,12 @@ private:
 };
 
 template<typename AllocatorT, typename PrefixT, typename SuffixT>
+[[nodiscard]] constexpr size_t affix_allocator<AllocatorT, PrefixT, SuffixT>::get_alignment() const
+{
+    return alignment;
+}
+
+template<typename AllocatorT, typename PrefixT, typename SuffixT>
 constexpr memory_block affix_allocator<AllocatorT, PrefixT, SuffixT>::allocate(size_t size)
 {
     if (size == 0)
@@ -165,12 +173,15 @@ constexpr bool affix_allocator<AllocatorT, PrefixT, SuffixT>::expand(memory_bloc
         return block;
     }
 
+    const size_t expected_size = block.size + delta;
+    const size_t expected_aligned_size = round_to_alignment(expected_size, alignment);
+    const size_t required_delta = expected_aligned_size - round_to_alignment(block.size, alignment);
+
     memory_block outer_block = unaligned_inner_to_outer(block);
 
     suffix_mover suffix_mover{*this, outer_block};
 
-    const size_t aligned_delta = round_to_alignment(delta, alignment);
-    const bool expand_result = allocator::expand(outer_block, aligned_delta);
+    const bool expand_result = allocator::expand(outer_block, required_delta);
 
     suffix_mover.move_to(*this, outer_block);
 

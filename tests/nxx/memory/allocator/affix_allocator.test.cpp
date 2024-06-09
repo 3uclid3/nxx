@@ -24,9 +24,9 @@ struct suffix : mock::basic_object<suffix, u8_t>
     u32_t value{pattern};
 };
 
-using stack_allocator4_t = stack_allocator<512, 4>;
-using stack_allocator8_t = stack_allocator<512, 8>;
-using stack_allocator16_t = stack_allocator<512, 16>;
+using stack_allocator4_t = stack_allocator<0x1000, 4>;
+using stack_allocator8_t = stack_allocator<0x1000, 8>;
+using stack_allocator16_t = stack_allocator<0x1000, 16>;
 
 using prefix_allocator = affix_allocator<stack_allocator4_t, prefix, no_memory_affix>;
 using suffix_allocator = affix_allocator<stack_allocator4_t, no_memory_affix, suffix>;
@@ -78,6 +78,11 @@ struct affix_allocator_fixture : allocator_fixture<AllocatorT>, mock::basic_obje
         }
     }
 };
+
+TEMPLATE_LIST_TEST_CASE_METHOD(basic_allocator_fixture, "affix_allocator basics", "[memory]", affix_allocator_types)
+{
+    this->test_basics();
+}
 
 TEMPLATE_LIST_TEST_CASE_METHOD(affix_allocator_fixture, "affix_allocator allocate returns nullblk when allocating 0 byte", "[memory]", affix_allocator_types)
 {

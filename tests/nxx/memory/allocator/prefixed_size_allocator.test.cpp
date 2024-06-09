@@ -1,4 +1,4 @@
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
 #include <nxx/memory/allocator/allocator.fixture.hpp>
@@ -6,6 +6,16 @@
 #include <nxx/memory/allocator/stack_allocator.hpp>
 
 namespace nxx {
+
+using prefixed_size_basic_allocators = std::tuple<
+    prefixed_size_allocator<stack_allocator<0x1000, 4>>,
+    prefixed_size_allocator<stack_allocator<0x1000, 8>>,
+    prefixed_size_allocator<stack_allocator<0x1000, 16>>>;
+
+TEMPLATE_LIST_TEST_CASE_METHOD(basic_allocator_fixture, "prefixed_size_allocator basics", "[memory]", prefixed_size_basic_allocators)
+{
+    this->test_basics();
+}
 
 using prefixed_size_allocator_fixture = allocator_fixture<prefixed_size_allocator<stack_allocator<512>>>;
 

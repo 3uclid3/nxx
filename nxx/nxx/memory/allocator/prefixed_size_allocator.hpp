@@ -16,6 +16,8 @@ public:
     static constexpr size_t alignment = super::alignment;
 
 public:
+    [[nodiscard]] constexpr size_t get_alignment() const;
+
     [[nodiscard]] constexpr memory_block allocate(size_t size);
 
     template<typename U = AllocatorT>
@@ -33,6 +35,12 @@ public:
 private:
     constexpr void set_prefixed_size(const memory_block& block, size_t size);
 };
+
+template<typename AllocatorT>
+constexpr size_t prefixed_size_allocator<AllocatorT>::get_alignment() const
+{
+    return alignment;
+}
 
 template<typename AllocatorT>
 constexpr memory_block prefixed_size_allocator<AllocatorT>::allocate(size_t size)
@@ -65,7 +73,8 @@ constexpr bool prefixed_size_allocator<AllocatorT>::expand(memory_block& block, 
 
     if (!block)
     {
-        return false;
+        block = allocate(delta);
+        return block;
     }
 
     memory_block sized_block(block.ptr, get_prefixed_size(block));
