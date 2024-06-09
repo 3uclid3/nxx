@@ -1,10 +1,20 @@
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include <nxx/memory/allocator/allocator.fixture.hpp>
 #include <nxx/memory/allocator/allocator.mock.hpp>
 #include <nxx/memory/allocator/proxy_interface_allocator.hpp>
+#include <nxx/memory/allocator/stack_allocator.hpp>
 
 namespace nxx {
+
+TEST_CASE_METHOD(basic_allocator_fixture<proxy_interface_allocator>, "proxy_interface_allocator basics", "[memory]")
+{
+    stack_allocator<0x1000> stack_allocator;
+    allocator.set_allocator(stack_allocator);
+
+    this->test_basics();
+}
 
 TEST_CASE_METHOD(allocator_fixture<mock::allocator>, "proxy_interface_allocator", "[memory]")
 {
@@ -71,7 +81,7 @@ TEST_CASE_METHOD(allocator_fixture<mock::allocator>, "proxy_interface_allocator"
     SECTION("unset_allocator")
     {
         CHECK(proxy_allocator.has_allocator());
-        
+
         proxy_allocator.unset_allocator();
 
         CHECK_FALSE(proxy_allocator.has_allocator());
@@ -134,7 +144,7 @@ TEST_CASE_METHOD(allocator_fixture<mock::minimal_allocator>, "proxy_interface_al
     SECTION("unset_allocator")
     {
         CHECK(proxy_allocator.has_allocator());
-        
+
         proxy_allocator.unset_allocator();
 
         CHECK_FALSE(proxy_allocator.has_allocator());

@@ -1,11 +1,35 @@
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include <nxx/memory/allocator/allocator.fixture.hpp>
 #include <nxx/memory/allocator/allocator.mock.hpp>
 #include <nxx/memory/allocator/segregator_allocator.hpp>
+#include <nxx/memory/allocator/stack_allocator.hpp>
 #include <nxx/memory/memory_block.hpp>
 
 namespace nxx {
+
+using segregator_basic_allocators = std::tuple<
+    segregator_allocator<
+        stack_allocator<0x1000, 4>,
+        stack_allocator<0x1001, 4>,
+        32>,
+    segregator_allocator<
+        stack_allocator<0x1000, 8>,
+        stack_allocator<0x1001, 8>,
+        32>,
+    segregator_allocator<
+        stack_allocator<0x1000, 16>,
+        stack_allocator<0x1001, 16>,
+        32>>;
+
+TEMPLATE_LIST_TEST_CASE_METHOD(basic_allocator_fixture, "segregator_allocator basics", "[memory]", segregator_basic_allocators)
+{
+    this->complex_expand = false;
+    this->unaligned_size = TestType::threshold;
+
+    this->test_basics();
+}
 
 struct small_tag
 {};
@@ -30,13 +54,6 @@ struct segregator_allocator_fixture : allocator_fixture<mock_segregator_allocato
         mock_large::reset_mock();
     }
 };
-
-TEST_CASE_METHOD(segregator_allocator_fixture, "segregator_allocator allocate zero returns nullblk", "[memory]")
-{
-    memory_block block = allocator.allocate(0);
-
-    CHECK(block == nullblk);
-}
 
 TEST_CASE_METHOD(segregator_allocator_fixture, "segregator_allocator allocate with small allocator", "[memory]")
 {

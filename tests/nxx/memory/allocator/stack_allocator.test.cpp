@@ -8,9 +8,14 @@
 namespace nxx {
 
 using stack_allocator_types = std::tuple<
-    stack_allocator<64, 4>,
-    stack_allocator<64, 8>,
-    stack_allocator<64, 16>>;
+    stack_allocator<0x1000, 4>,
+    stack_allocator<0x1000, 8>,
+    stack_allocator<0x1000, 16>>;
+
+TEMPLATE_LIST_TEST_CASE_METHOD(basic_allocator_fixture, "stack_allocator basics", "[memory]", stack_allocator_types)
+{
+    this->test_basics();
+}
 
 TEMPLATE_LIST_TEST_CASE_METHOD(allocator_fixture, "stack_allocator allocate returns nullblk when allocating 0 byte", "[memory]", stack_allocator_types)
 {

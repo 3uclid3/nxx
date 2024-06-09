@@ -19,6 +19,8 @@ public:
 
     constexpr ~proxy_interface_allocator();
 
+    [[nodiscard]] constexpr size_t get_alignment() const;
+
     [[nodiscard]] constexpr memory_block allocate(size_t size);
     [[nodiscard]] constexpr bool owns(const memory_block& block) const;
     constexpr bool expand(memory_block& block, size_t delta);
@@ -36,6 +38,8 @@ private:
     {
         virtual ~interface() = default;
 
+        [[nodiscard]] virtual size_t get_alignment() const = 0;
+
         [[nodiscard]] virtual memory_block allocate(size_t size) = 0;
         [[nodiscard]] virtual bool owns(const memory_block& block) const = 0;
         virtual bool expand(memory_block& block, size_t delta) = 0;
@@ -48,6 +52,8 @@ private:
     struct implementation : interface
     {
         constexpr explicit implementation(AllocatorT& allocator);
+
+        [[nodiscard]] size_t get_alignment() const override;
 
         [[nodiscard]] memory_block allocate(size_t size) override;
         [[nodiscard]] bool owns(const memory_block& block) const override;
@@ -70,6 +76,12 @@ template<typename AllocatorT>
 constexpr proxy_interface_allocator::implementation<AllocatorT>::implementation(AllocatorT& allocator)
     : allocator{ref(allocator)}
 {
+}
+
+template<typename AllocatorT>
+size_t proxy_interface_allocator::implementation<AllocatorT>::get_alignment() const
+{
+    return allocator.get().get_alignment();
 }
 
 template<typename AllocatorT>
@@ -130,6 +142,12 @@ constexpr proxy_interface_allocator::proxy_interface_allocator(AllocatorT& alloc
 constexpr proxy_interface_allocator::~proxy_interface_allocator()
 {
     unset_allocator();
+}
+
+constexpr size_t proxy_interface_allocator::get_alignment() const
+{
+    NXX_ASSERT(_interface);
+    return _interface->get_alignment();
 }
 
 constexpr memory_block proxy_interface_allocator::allocate(size_t size)

@@ -18,6 +18,8 @@ public:
     static constexpr size_t threshold = ThresholdT;
 
 public:
+    constexpr size_t get_alignment() const;
+    
     [[nodiscard]] constexpr memory_block allocate(size_t size);
 
     template<typename U = SmallAllocatorT, typename V = LargeAllocatorT>
@@ -36,10 +38,16 @@ public:
 
 private:
     constexpr bool is_small(size_t size) const;
-    
+
     static_assert(ThresholdT > 0, "Threshold must be greater than 0");
     static_assert(round_to_alignment(ThresholdT, alignment) == ThresholdT, "Threshold must be a multiple of the alignment");
 };
+
+template<typename SmallAllocatorT, typename LargeAllocatorT, size_t ThresholdT>
+constexpr size_t segregator_allocator<SmallAllocatorT, LargeAllocatorT, ThresholdT>::get_alignment() const
+{
+    return alignment;
+}
 
 template<typename SmallAllocatorT, typename LargeAllocatorT, size_t ThresholdT>
 constexpr memory_block segregator_allocator<SmallAllocatorT, LargeAllocatorT, ThresholdT>::allocate(size_t size)
@@ -88,9 +96,9 @@ constexpr bool segregator_allocator<SmallAllocatorT, LargeAllocatorT, ThresholdT
 template<typename SmallAllocatorT, typename LargeAllocatorT, size_t ThresholdT>
 constexpr bool segregator_allocator<SmallAllocatorT, LargeAllocatorT, ThresholdT>::reallocate(memory_block& block, size_t new_size)
 {
-    if (try_default_reallocate(*this, block, new_size))
+    if (auto [success, reallocated] = try_default_reallocate(*this, block, new_size); success)
     {
-        return block;
+        return reallocated;
     }
 
     // from small block?
@@ -109,7 +117,7 @@ constexpr bool segregator_allocator<SmallAllocatorT, LargeAllocatorT, ThresholdT
     {
         return reallocate_with_new_allocator<large, small>(*this, *this, block, new_size);
     }
-    
+
     return large::reallocate(block, new_size);
 }
 

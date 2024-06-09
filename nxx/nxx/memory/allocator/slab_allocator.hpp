@@ -143,9 +143,9 @@ constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::expan
 template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
 constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::reallocate(memory_block& block, size_t new_size)
 {
-    if (try_default_reallocate(*this, block, new_size))
+    if (auto [success, reallocated] = try_default_reallocate(*this, block, new_size); success)
     {
-        return block;
+        return reallocated;
     }
 
     const size_t index = index_for_size(block.size);

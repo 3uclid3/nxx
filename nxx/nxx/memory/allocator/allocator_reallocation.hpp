@@ -6,27 +6,33 @@
 
 namespace nxx {
 
+struct default_reallocate_result
+{
+    bool success;
+    bool reallocated;
+};
+
 template<typename AllocatorT>
-constexpr bool try_default_reallocate(AllocatorT& allocator, memory_block& block, size_t new_size)
+constexpr default_reallocate_result try_default_reallocate(AllocatorT& allocator, memory_block& block, size_t new_size)
 {
     if (block.size == new_size)
     {
-        return true;
+        return {true, true};
     }
 
     if (new_size == 0)
     {
         allocator.deallocate(block);
-        return true;
+        return {true, true};
     }
 
     if (!block)
     {
         block = allocator.allocate(new_size);
-        return true;
+        return {true, block != nullblk};
     }
 
-    return false;
+    return {false, false};
 }
 
 template<typename OriginalAllocatorT, typename NewAllocatorT>

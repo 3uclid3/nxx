@@ -18,6 +18,8 @@ public:
     static constexpr size_t max_size = SizeT;
 
 public:
+    constexpr size_t get_alignment() const;
+
     [[nodiscard]] constexpr memory_block allocate(size_t size);
     [[nodiscard]] constexpr bool owns(const memory_block& block) const;
     constexpr bool expand(memory_block& block, size_t delta);
@@ -32,6 +34,12 @@ private:
     alignas(AlignmentT) u8_t _data[SizeT];
     u8_t* _ptr{_data};
 };
+
+template<size_t SizeT, size_t AlignmentT>
+constexpr size_t stack_allocator<SizeT, AlignmentT>::get_alignment() const
+{
+    return AlignmentT;
+}
 
 template<size_t SizeT, size_t AlignmentT>
 constexpr memory_block stack_allocator<SizeT, AlignmentT>::allocate(size_t size)
@@ -80,9 +88,9 @@ constexpr void stack_allocator<SizeT, AlignmentT>::deallocate(memory_block& bloc
 template<size_t SizeT, size_t AlignmentT>
 constexpr bool stack_allocator<SizeT, AlignmentT>::reallocate(memory_block& block, size_t new_size)
 {
-    if (try_default_reallocate(*this, block, new_size))
+    if (auto [success, reallocated] = try_default_reallocate(*this, block, new_size); success)
     {
-        return block;
+        return reallocated;
     }
 
     const size_t aligned_new_size = round_to_alignment(new_size, AlignmentT);
@@ -95,9 +103,7 @@ constexpr bool stack_allocator<SizeT, AlignmentT>::reallocate(memory_block& bloc
             _ptr = block.as<u8_t>() + aligned_new_size;
             return true;
         }
-
-        // out of memory
-        return false;
+        return false; // oom
     }
 
     const size_t aligned_size = round_to_alignment(block.size, AlignmentT);
@@ -108,12 +114,10 @@ constexpr bool stack_allocator<SizeT, AlignmentT>::reallocate(memory_block& bloc
         return true;
     }
 
-    if (memory_block new_block = allocate(aligned_new_size))
+    if (memory_block new_block = allocate(new_size))
     {
         memcpy(new_block.ptr, block.ptr, block.size);
-
-        block.ptr = new_block.ptr;
-        block.size = new_size;
+        block = new_block;
         return true;
     }
 
@@ -139,14 +143,14 @@ constexpr bool stack_allocator<SizeT, AlignmentT>::expand(memory_block& block, s
         return false;
     }
 
-    const size_t aligned_delta = round_to_alignment(delta, AlignmentT);
+    const size_t aligned_new_size = round_to_alignment(block.size + delta, alignment);
 
-    if (_ptr + aligned_delta > _data + SizeT)
+    if (block.as<u8_t>() + aligned_new_size > _data + SizeT)
     {
         return false;
     }
 
-    _ptr += aligned_delta;
+    _ptr = block.as<u8_t>() + aligned_new_size;
     block.size += delta;
 
     return true;

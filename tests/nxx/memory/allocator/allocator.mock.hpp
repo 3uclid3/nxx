@@ -11,6 +11,11 @@ struct basic_minimal_allocator
 {
     static constexpr size_t alignment = default_alignment;
 
+    [[nodiscard]] size_t get_alignment()
+    {
+        return alignment;
+    }
+
     [[nodiscard]] memory_block allocate(size_t size)
     {
         NXX_UNUSED(size);

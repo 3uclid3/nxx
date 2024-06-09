@@ -85,9 +85,9 @@ constexpr bool prefixed_size_allocator<AllocatorT>::expand(memory_block& block, 
 template<typename AllocatorT>
 constexpr bool prefixed_size_allocator<AllocatorT>::reallocate(memory_block& block, size_t new_size)
 {
-    if (try_default_reallocate(*this, block, new_size))
+    if (auto [success, reallocated] = try_default_reallocate(*this, block, new_size); success)
     {
-        return block;
+        return reallocated;
     }
 
     memory_block sized_block(block.ptr, get_prefixed_size(block));

@@ -85,14 +85,14 @@ constexpr bool fallback_allocator<PrimaryAllocatorT, FallbackAllocatorT>::reallo
 
     if (is_primary_owner)
     {
-        if (try_default_reallocate<primary>(*this, block, new_size))
+        if (auto [success, reallocated] = try_default_reallocate<primary>(*this, block, new_size); success)
         {
-            return block;
+            return reallocated;
         }
     }
-    else if (try_default_reallocate<fallback>(*this, block, new_size))
+    else if (auto [success, reallocated] = try_default_reallocate<fallback>(*this, block, new_size); success)
     {
-        return block;
+        return reallocated;
     }
 
     if (is_primary_owner)

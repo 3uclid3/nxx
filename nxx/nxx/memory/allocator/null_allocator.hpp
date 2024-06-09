@@ -11,6 +11,8 @@ public:
     static constexpr size_t alignment = 64 * 1024;
 
 public:
+    constexpr size_t get_alignment() const;
+
     [[nodiscard]] constexpr memory_block allocate(size_t size);
     [[nodiscard]] constexpr bool owns(const memory_block& block) const;
     constexpr bool expand(memory_block& block, size_t delta);
@@ -18,6 +20,11 @@ public:
     constexpr void deallocate(memory_block& block);
     constexpr void deallocate_all();
 };
+
+constexpr size_t null_allocator::get_alignment() const
+{
+    return alignment;
+}
 
 constexpr memory_block null_allocator::allocate(size_t size)
 {
