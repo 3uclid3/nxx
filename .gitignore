@@ -1,7 +1,9 @@
 **/__pycache__/*
 
-.vscode/*
 .idea/*
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 
 build/*
 logs/*

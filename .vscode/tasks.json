@@ -1,0 +1,65 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "setup-clang-18",
+            "type": "shell",
+            "command": "task setup:clang-18",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "setup-gcc-13",
+            "type": "shell",
+            "command": "task setup:gcc-13",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "setup-gcc-14",
+            "type": "shell",
+            "command": "task setup:gcc-14",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        
+        {
+            "label": "compile",
+            "type": "shell",
+            "command": "task compile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "task test",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        
+        {
+            "label": "coverage",
+            "type": "shell",
+            "command": "task coverage",
+            "dependsOn": [
+                "test"
+            ],
+            "group": {
+                "kind": "none",
+                "isDefault": true
+            }
+        }
+    ]
+}
