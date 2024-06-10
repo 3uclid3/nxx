@@ -1,15 +1,30 @@
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
 #include <vector>
 
+#include <nxx/memory/allocator/allocator.fixture.hpp>
+#include <nxx/memory/allocator/allocator.mock.hpp>
 #include <nxx/memory/allocator/slab_allocator.hpp>
 #include <nxx/memory/allocator/stack_allocator.hpp>
 
 namespace nxx {
 
+using slab_basic_allocators = std::tuple<
+    slab_allocator<stack_allocator<0x1000 * 6, 4>, 0x1000, 32, 64, 128, 256, 512, 1024>,
+    slab_allocator<stack_allocator<0x1000 * 6, 8>, 0x1000, 32, 64, 128, 256, 512, 1024>,
+    slab_allocator<stack_allocator<0x1000 * 6, 16>, 0x1000, 32, 64, 128, 256, 512, 1024>>;
+
+TEMPLATE_LIST_TEST_CASE_METHOD(basic_allocator_fixture, "slab_allocator basics", "[memory]", slab_basic_allocators)
+{
+    this->small_expand = false;
+    this->large_expand = false;
+
+    this->test_basics();
+}
+
 TEST_CASE("slab_allocator allocate and deallocate objects with sizes matching slab sizes")
 {
-    slab_allocator<stack_allocator<1024>, 4, 32, 64, 128> allocator;
+    slab_allocator<stack_allocator<0x1000 * 3>, 0x1000, 32, 64, 128> allocator;
 
     memory_block block1 = allocator.allocate(32);
     CHECK(block1.ptr != nullptr);
@@ -30,7 +45,7 @@ TEST_CASE("slab_allocator allocate and deallocate objects with sizes matching sl
 
 TEST_CASE("slab_allocator allocate and deallocate objects with sizes less than slab sizes")
 {
-    slab_allocator<stack_allocator<1024>, 4, 32, 64, 128> allocator;
+    slab_allocator<stack_allocator<0x1000 * 3>, 0x1000, 32, 64, 128> allocator;
 
     memory_block block1 = allocator.allocate(24);
     CHECK(block1.ptr != nullptr);
@@ -51,7 +66,7 @@ TEST_CASE("slab_allocator allocate and deallocate objects with sizes less than s
 
 TEST_CASE("slab_allocator allocate nullblk with unsupported size", "[memory]")
 {
-    slab_allocator<stack_allocator<1024>, 4, 32, 64, 128> allocator;
+    slab_allocator<stack_allocator<0x1000 * 3>, 0x1000, 32, 64, 128> allocator;
 
     SECTION("zero")
     {
@@ -67,7 +82,7 @@ TEST_CASE("slab_allocator allocate nullblk with unsupported size", "[memory]")
 
 TEST_CASE("slab_allocator deallocate nullblk", "[memory]")
 {
-    slab_allocator<stack_allocator<1024>, 4, 32, 64, 128> allocator;
+    slab_allocator<stack_allocator<0x1000 * 3>, 0x1000, 32, 64, 128> allocator;
 
     memory_block block = nullblk;
     allocator.deallocate(block);
@@ -78,7 +93,7 @@ TEST_CASE("slab_allocator fragmentation handling with 'random' deallocation", "[
 {
     constexpr size_t allocation_count = 10;
 
-    slab_allocator<stack_allocator<1024 * 8>, 32, 32, 64, 128> allocator;
+    slab_allocator<stack_allocator<0x1000 * 3>, 0x1000, 32, 64, 128> allocator;
 
     std::vector<size_t> indices = {3, 8, 2, 9, 4, 5, 0, 7, 1, 6};
     REQUIRE(indices.size() == allocation_count);
@@ -108,7 +123,7 @@ TEST_CASE("slab_allocator fragmentation handling with 'random' deallocation", "[
 
 TEST_CASE("slab_allocator stress test with delayed deallocation", "[memory]")
 {
-    slab_allocator<stack_allocator<0x1000 * 32>, 64, 32, 64> allocator;
+    slab_allocator<stack_allocator<0x1000 * 32>, 0x1000, 32, 64> allocator;
 
     std::vector<memory_block> blocks;
 

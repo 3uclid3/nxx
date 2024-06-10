@@ -32,9 +32,14 @@ struct slab
     void* first_free{nullptr};
 };
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
 class slab_allocator : private AllocatorT
 {
+    static_assert(SlabCapacityT > 0, "Slab capacity must be greater than zero.");
+    static_assert((SlabCapacityT % AllocatorT::alignment) == 0, "Slab capacity must be a multiple of alignment.");
+    static_assert((((SlabSizesT % AllocatorT::alignment) == 0) && ...), "Each allocation size must be a multiple of alignment.");
+    static_assert(((SlabSizesT >= sizeof(void*)) && ...), "Each allocation size must be at least the size of a pointer.");
+
 public:
     using allocator = AllocatorT;
 
@@ -45,6 +50,8 @@ public:
     static constexpr size_t max_size = size_at_index(sizeof...(SlabSizesT) - 1);
 
 public:
+    [[nodiscard]] constexpr size_t get_alignment() const;
+
     [[nodiscard]] constexpr memory_block allocate(size_t size);
 
     template<typename U = AllocatorT>
@@ -68,24 +75,30 @@ private:
     static_array<slab, sizeof...(SlabSizesT)> _slabs{};
 };
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr size_t slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::index_for_size(size_t size)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr size_t slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::index_for_size(size_t size)
 {
     size_t index = 0;
     (..., (index += (SlabSizesT < size ? 1 : 0)));
     return index;
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr size_t slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::size_at_index(size_t index)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr size_t slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::size_at_index(size_t index)
 {
     size_t size = 0;
     (..., (size = index-- == 0 ? SlabSizesT : size));
     return size;
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr memory_block slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::allocate(size_t size)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr size_t slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::get_alignment() const
+{
+    return alignment;
+}
+
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr memory_block slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::allocate(size_t size)
 {
     if (size == 0)
     {
@@ -100,25 +113,26 @@ constexpr memory_block slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...
     return unsafe_allocate(size);
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
 template<typename U>
 requires(allocator_traits::has_owns<U>)
-constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::owns(const memory_block& block) const
+constexpr bool slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::owns(const memory_block& block) const
 {
     return block.size <= size_at_index(sizeof...(SlabSizesT) - 1) && allocator::owns(block);
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::expand(memory_block& block, size_t delta)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr bool slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::expand(memory_block& block, size_t delta)
 {
-    if (!block)
-    {
-        return false;
-    }
-
     if (delta == 0)
     {
         return true;
+    }
+
+    if (!block)
+    {
+        block = allocate(delta);
+        return block;
     }
 
     const size_t new_size = block.size + delta;
@@ -140,8 +154,8 @@ constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::expan
     return true;
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::reallocate(memory_block& block, size_t new_size)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr bool slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::reallocate(memory_block& block, size_t new_size)
 {
     if (auto [success, reallocated] = try_default_reallocate(*this, block, new_size); success)
     {
@@ -167,8 +181,8 @@ constexpr bool slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::reall
     return false;
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr void slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::deallocate(memory_block& block)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr void slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::deallocate(memory_block& block)
 {
     if (!block)
     {
@@ -186,19 +200,28 @@ constexpr void slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::deall
 
     block = nullblk;
 }
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-void slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::allocate_for_slab(slab& slab, size_t index)
-{
-    const size_t object_size = size_at_index(index);
-    const size_t minimum_size = object_size * ObjectsPerSlabT;
 
-    memory_block block = AllocatorT::allocate(minimum_size);
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+template<typename U>
+requires(allocator_traits::has_deallocate_all<U>)
+constexpr void slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::deallocate_all()
+{
+    AllocatorT::deallocate_all();
+
+    _slabs = {};
+}
+
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+void slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::allocate_for_slab(slab& slab, size_t index)
+{
+    memory_block block = AllocatorT::allocate(SlabCapacityT);
 
     if (!block)
     {
         return;
     }
 
+    const size_t object_size = size_at_index(index);
     const size_t objects_count = block.size / object_size;
 
     for (size_t i = 0; i < objects_count; ++i)
@@ -207,8 +230,8 @@ void slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::allocate_for_sl
     }
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr memory_block slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::unsafe_allocate(size_t size)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr memory_block slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::unsafe_allocate(size_t size)
 {
     size_t index = index_for_size(size);
 
@@ -224,14 +247,14 @@ constexpr memory_block slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...
     return memory_block{slab.allocate(), size};
 }
 
-template<typename AllocatorT, size_t ObjectsPerSlabT, size_t... SlabSizesT>
-constexpr void slab_allocator<AllocatorT, ObjectsPerSlabT, SlabSizesT...>::unsafe_deallocate(memory_block& block)
+template<typename AllocatorT, size_t SlabCapacityT, size_t... SlabSizesT>
+constexpr void slab_allocator<AllocatorT, SlabCapacityT, SlabSizesT...>::unsafe_deallocate(memory_block& block)
 {
     size_t index = index_for_size(block.size);
 
-    NXX_ASSERT(index >= _slabs.size());
+    NXX_ASSERT(index < _slabs.size());
 
-    _slabs[index].free(block);
+    _slabs[index].deallocate(block);
 
     block = nullblk;
 }

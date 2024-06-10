@@ -95,53 +95,61 @@ struct basic_allocator_fixture
     {
         if constexpr (allocator_traits::has_expand<AllocatorT>)
         {
+            if (!small_expand && !large_expand)
+            {
+                return;
+            }
+
             SECTION("expand")
             {
-                SECTION("expand size 0 does nothing")
+                if (small_expand)
                 {
-                    scope_memory_block block = allocator.allocate(aligned_size);
+                    SECTION("expand size 0 does nothing")
+                    {
+                        scope_memory_block block = allocator.allocate(aligned_size);
 
-                    CHECK(allocator.expand(block, 0));
-                    CHECK(block.ptr != nullptr);
-                    CHECK(block.size == aligned_size);
+                        CHECK(allocator.expand(block, 0));
+                        CHECK(block.ptr != nullptr);
+                        CHECK(block.size == aligned_size);
+                    }
+
+                    SECTION("expand size 0 nullblk does nothing")
+                    {
+                        scope_memory_block block = nullblk;
+
+                        CHECK(allocator.expand(block, 0));
+                        CHECK(block == nullblk);
+                    }
+
+                    SECTION("expand nullblk allocate")
+                    {
+                        scope_memory_block block = nullblk;
+
+                        CHECK(allocator.expand(block, aligned_size));
+                        CHECK(block.ptr != nullptr);
+                        CHECK(block.size == aligned_size);
+                    }
+
+                    SECTION("expand size smaller than alignment to alignment")
+                    {
+                        scope_memory_block block = allocator.allocate(allocator.get_alignment() - 1);
+
+                        CHECK(allocator.expand(block, 1));
+                        CHECK(block.ptr != nullptr);
+                        CHECK(block.size == allocator.get_alignment());
+                    }
+
+                    SECTION("expand size bigger than alignment to double alignment")
+                    {
+                        scope_memory_block block = allocator.allocate(allocator.get_alignment() + 1);
+
+                        CHECK(allocator.expand(block, allocator.get_alignment() - 1));
+                        CHECK(block.ptr != nullptr);
+                        CHECK(block.size == allocator.get_alignment() * 2);
+                    }
                 }
 
-                SECTION("expand size 0 nullblk does nothing")
-                {
-                    scope_memory_block block = nullblk;
-
-                    CHECK(allocator.expand(block, 0));
-                    CHECK(block == nullblk);
-                }
-
-                SECTION("expand nullblk allocate")
-                {
-                    scope_memory_block block = nullblk;
-
-                    CHECK(allocator.expand(block, aligned_size));
-                    CHECK(block.ptr != nullptr);
-                    CHECK(block.size == aligned_size);
-                }
-
-                SECTION("expand size smaller than alignment to alignment")
-                {
-                    scope_memory_block block = allocator.allocate(allocator.get_alignment() - 1);
-
-                    CHECK(allocator.expand(block, 1));
-                    CHECK(block.ptr != nullptr);
-                    CHECK(block.size == allocator.get_alignment());
-                }
-
-                SECTION("expand size bigger than alignment to double alignment")
-                {
-                    scope_memory_block block = allocator.allocate(allocator.get_alignment() + 1);
-
-                    CHECK(allocator.expand(block, allocator.get_alignment() - 1));
-                    CHECK(block.ptr != nullptr);
-                    CHECK(block.size == allocator.get_alignment() * 2);
-                }
-
-                if (complex_expand)
+                if (large_expand)
                 {
                     SECTION("expand")
                     {
@@ -369,7 +377,8 @@ struct basic_allocator_fixture
     size_t aligned_size = 42;
     size_t unaligned_size = 42;
 
-    bool complex_expand = true;
+    bool small_expand = true;
+    bool large_expand = true;
 
     inline static AllocatorT* allocator_ptr{nullptr};
 };

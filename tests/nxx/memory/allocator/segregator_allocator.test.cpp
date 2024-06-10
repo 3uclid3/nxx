@@ -25,7 +25,7 @@ using segregator_basic_allocators = std::tuple<
 
 TEMPLATE_LIST_TEST_CASE_METHOD(basic_allocator_fixture, "segregator_allocator basics", "[memory]", segregator_basic_allocators)
 {
-    this->complex_expand = false;
+    this->large_expand = false;
     this->unaligned_size = TestType::threshold;
 
     this->test_basics();
